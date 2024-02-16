@@ -121,7 +121,7 @@ public class DirectoryConnector {
 			try {
 			socket.send(packetToServer);
 			socket.setSoTimeout(TIMEOUT);
-				socket.receive(packetToServer);
+				socket.receive(packetFromServer);
 			} catch (SocketTimeoutException e) {
 				cont++;
 				continue;
