@@ -74,10 +74,12 @@ public class DirectoryConnector {
 	 * 
 	 * @param requestData los datos a enviar al directorio (mensaje de solicitud)
 	 * @return los datos recibidos del directorio (mensaje de respuesta)
+	 * @throws IOException 
 	 */
-	private byte[] sendAndReceiveDatagrams(byte[] requestData) {
+	private byte[] sendAndReceiveDatagrams(byte[] requestData)  { //Cuando lo pida, hay que quitar el throws y tratar la excepción
 		byte responseData[] = new byte[DirMessage.PACKET_MAX_SIZE];
 		byte response[] = null;
+		response = new byte[DirMessage.PACKET_MAX_SIZE];
 		if (directoryAddress == null) {
 			System.err.println("DirectoryConnector.sendAndReceiveDatagrams: UDP server destination address is null!");
 			System.err.println(
@@ -96,6 +98,8 @@ public class DirectoryConnector {
 		 * array devuelto debe contener únicamente los datos recibidos, *NO* el búfer de
 		 * recepción al completo.
 		 */
+		DatagramPacket packetToServer = new DatagramPacket(requestData, requestData.length, directoryAddress);
+		DatagramPacket packetFromServer = new DatagramPacket(responseData, responseData.length);
 		//try catch con el recieve o send
 		/*
 		 * TODO: Una vez el envío y recepción asumiendo un canal confiable (sin
@@ -103,27 +107,46 @@ public class DirectoryConnector {
 		 * retransmisión usando temporizador, en caso de que no se reciba respuesta en
 		 * el plazo de TIMEOUT. En caso de salte el timeout, se debe reintentar como
 		 * máximo en MAX_NUMBER_OF_ATTEMPTS ocasiones.
-		 */
 		
-		/*
 		 * TODO: Las excepciones que puedan lanzarse al leer/escribir en el socket deben
 		 * ser capturadas y tratadas en este método. Si se produce una excepción de
 		 * entrada/salida (error del que no es posible recuperarse), se debe informar y
 		 * terminar el programa.
-		 */
 		
-		/*
 		 * NOTA: Las excepciones deben tratarse de la más concreta a la más genérica.
 		 * SocketTimeoutException es más concreta que IOException.
 		 */
+		int cont = 0;
+		while(cont<MAX_NUMBER_OF_ATTEMPTS){
+			try {
+			socket.send(packetToServer);
+			socket.setSoTimeout(TIMEOUT);
+				socket.receive(packetToServer);
+			} catch (SocketTimeoutException e) {
+				cont++;
+				continue;
+			} catch (IOException e){
+				System.out.println("Error de entrada/salida en el socket");
+				System.exit(-1);
+			}
+			break;
+		}
+		//PREGUNTAR AL PROFESOR IOE
 
+		if(cont==MAX_NUMBER_OF_ATTEMPTS){
+			System.err.println("Maximo numero de envíos realizados");
+			System.exit(-1);
+		}
 
+		String messageFromServer = new String(responseData, 0, packetFromServer.getLength());
+		response = messageFromServer.getBytes();
+		
 
-		if (response != null && response.length == responseData.length) {
+		if (responseData != null && responseData.length == response.length) {
 			System.err.println("Your response is as large as the datagram reception buffer!!\n"
 					+ "You must extract from the buffer only the bytes that belong to the datagram!");
 		}
-		return response;
+		return responseData;
 	}
 
 	/**
@@ -131,8 +154,9 @@ public class DirectoryConnector {
 	 * recepción de mensajes sin formatear ("en crudo")
 	 * 
 	 * @return verdadero si se ha enviado un datagrama y recibido una respuesta
+	 * @throws IOException 
 	 */
-	public boolean testSendAndReceive() {
+	public boolean testSendAndReceive() throws IOException {
 		/*
 		 * TODO: Probar el correcto funcionamiento de sendAndReceiveDatagrams. Se debe
 		 * enviar un datagrama con la cadena "login" y comprobar que la respuesta
@@ -140,8 +164,14 @@ public class DirectoryConnector {
 		 * no contiene los datos esperados.
 		 */
 		boolean success = false;
-
-
+		String mensaje ="login";
+		String loginok ="loginok";
+		byte respuesta[] = sendAndReceiveDatagrams(mensaje.getBytes());;
+		String r = new String(respuesta, 0, respuesta.length);
+		System.out.println(r);
+		if (r.equals(loginok)) {
+			success=true;
+		}
 
 		return success;
 	}

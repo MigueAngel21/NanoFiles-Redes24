@@ -54,7 +54,7 @@ public class NFDirectoryServer {
 	 */
 	private double messageDiscardProbability;
 
-	public NFDirectoryServer(double corruptionProbability) throws SocketException {
+	public NFDirectoryServer(double corruptionProbability) throws SocketException {	//Ejercicio 4(Constructor)
 		/*
 		 * Guardar la probabilidad de pérdida de datagramas (simular enlace no
 		 * confiable)
@@ -65,13 +65,14 @@ public class NFDirectoryServer {
 		 * ligado al puerto especificado por el argumento directoryPort en la máquina
 		 * local,
 		 */
-		
-
+		socket = new DatagramSocket(DIRECTORY_PORT);
+		System.out.println("Server listening on socket addresss " + socket.getLocalSocketAddress());	//remover mas tarde(Utilidad para debuggear)
 		/*
 		 * TODO: (Boletín UDP) Inicializar el resto de atributos de esta clase
 		 * (estructuras de datos que mantiene el servidor: nicks, sessionKeys, etc.)
 		 */
-		
+		this.nicks=new HashMap<String,Integer>();
+		this.sessionKeys=new HashMap<Integer,String>();
 
 
 
@@ -86,28 +87,36 @@ public class NFDirectoryServer {
 
 	public void run() throws IOException {
 		byte[] receptionBuffer = null;
+		receptionBuffer = new byte[DirMessage.PACKET_MAX_SIZE];
 		InetSocketAddress clientAddr = null;
 		int dataLength = -1;
 		/*
 		 * TODO: (Boletín UDP) Crear un búfer para recibir datagramas y un datagrama
 		 * asociado al búfer
 		 */
-
-
-
-
+		
+		 DatagramPacket packetFromClient = new DatagramPacket(receptionBuffer, receptionBuffer.length);
 		System.out.println("Directory starting...");
-
+		
 		while (true) { // Bucle principal del servidor de directorio
+			
 
 			// TODO: (Boletín UDP) Recibimos a través del socket un datagrama
+
+			System.out.println("Waiting to receive datagram...");
+			socket.receive(packetFromClient);
 
 			// TODO: (Boletín UDP) Establecemos dataLength con longitud del datagrama
 			// recibido
 
+			dataLength=packetFromClient.getLength();
+			System.out.println(" Datagram size: " + dataLength + " bytes");
+
 			// TODO: (Boletín UDP) Establecemos 'clientAddr' con la dirección del cliente,
 			// obtenida del
 			// datagrama recibido
+
+			clientAddr=(InetSocketAddress) packetFromClient.getSocketAddress();
 
 
 
@@ -128,7 +137,7 @@ public class NFDirectoryServer {
 				 * TODO: (Boletín UDP) Construir una cadena a partir de los datos recibidos en
 				 * el buffer de recepción
 				 */
-
+				messageFromClient = new String(receptionBuffer,0,packetFromClient.getLength());
 
 
 
@@ -141,6 +150,14 @@ public class NFDirectoryServer {
 					 * cadena "loginok". Si el mensaje recibido no es "login", se informa del error
 					 * y no se envía ninguna respuesta.
 					 */
+					if (messageFromClient.equals("login")) {
+						String mensaje=new String(messageFromClient+"ok");
+						byte[] datatoclient=mensaje.getBytes();
+						DatagramPacket packetToClient = new DatagramPacket(datatoclient, datatoclient.length, clientAddr);
+						socket.send(packetToClient);
+					} else{
+						System.err.println("Error de inicio de sesion");
+					}
 
 
 
