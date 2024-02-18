@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.UUID;
 
 import es.um.redes.nanoFiles.application.NanoFiles;
 import es.um.redes.nanoFiles.udp.message.DirMessage;
@@ -137,8 +138,11 @@ public class NFDirectoryServer {
 				 * TODO: (Boletín UDP) Construir una cadena a partir de los datos recibidos en
 				 * el buffer de recepción
 				 */
-				messageFromClient = new String(receptionBuffer,0,packetFromClient.getLength());
+				messageFromClient = new String(receptionBuffer,0,packetFromClient.getLength());	//login&nickname en string
 
+				String[] segmentos = messageFromClient.split("&");
+				String username = segmentos[1];
+				String login = segmentos[0];
 
 
 				if (NanoFiles.testMode) { // En modo de prueba (mensajes en "crudo", boletín UDP)
@@ -169,6 +173,23 @@ public class NFDirectoryServer {
 						System.err.println("Directory DISCARDED datagram from " + clientAddr);
 						continue;
 					}
+					if (nicks.containsKey(username)) {
+						String mensaje=new String("Login_failed: -1");
+						byte[] respuesta = mensaje.getBytes();
+						DatagramPacket packetToClient = new DatagramPacket(respuesta,respuesta.length,clientAddr);
+						socket.send(packetToClient);
+					} else{
+						if (login.equals("login")) {
+							int clave = random.nextInt(10000);
+							nicks.put(username, clave);
+							String mensaje=new String("loginok&"+clave);
+							byte[] datatoclient=mensaje.getBytes();
+							DatagramPacket packetToClient = new DatagramPacket(datatoclient, datatoclient.length, clientAddr);
+							socket.send(packetToClient);
+						} else{
+							System.err.println("Error de inicio de sesion");
+						}
+				}
 
 					/*
 					 * TODO: Construir String partir de los datos recibidos en el datagrama. A

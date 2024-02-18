@@ -62,6 +62,19 @@ public class NFControllerLogicDir {
 		 * sesión asignada por el directorio. Devolver éxito/fracaso de la operación.
 		 */
 		boolean result = false;
+		try {
+			directoryConnector = new DirectoryConnector(directoryHostname);
+			boolean exito = directoryConnector.logIntoDirectory(nickname);
+			if (exito){
+				System.out.println("Inicio de sesión con éxito con la clave de sesión: "+exito);
+			} else {
+				System.err.println("Error de inicio de sesión: Login");
+			}
+		} catch (Exception e) {
+			System.out.println("Error de inicio de sesion");
+		}
+		
+
 
 
 

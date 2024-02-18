@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 
+import javax.print.DocFlavor.STRING;
+
 import es.um.redes.nanoFiles.udp.message.DirMessage;
 import es.um.redes.nanoFiles.udp.message.DirMessageOps;
 import es.um.redes.nanoFiles.util.FileInfo;
@@ -205,8 +207,25 @@ public class DirectoryConnector {
 		// DirMessage.fromString)
 		// TODO: 6.Extraer datos del objeto DirMessage y procesarlos (p.ej., sessionKey)
 		// TODO: 7.Devolver éxito/fracaso de la operación
+		String confirmacion = "loginok";
+		String mensaje = new String("login&"+nickname);
+		byte[] messageToServer = mensaje.getBytes();
+		byte[] responseFromServer = sendAndReceiveDatagrams(messageToServer);
+		String r = new String(responseFromServer, 0, responseFromServer.length);//mensaje "loginok&"+numero
+		if (r.equals("Login_failed: -1")) {
+			System.err.println("Login_failed: -1");
+		} else{
+			String[] segmentos = r.split("&");
+			String login = segmentos[0];
 
-
+			if (login.equals(confirmacion)) {
+				success=true;
+				sessionKey = Integer.parseInt(segmentos[1]);
+				System.out.println("Login correcto con la clave: "+sessionKey);
+			} else {
+				System.err.println("Error de inicio de sesion");
+		}
+	}
 
 		return success;
 	}
