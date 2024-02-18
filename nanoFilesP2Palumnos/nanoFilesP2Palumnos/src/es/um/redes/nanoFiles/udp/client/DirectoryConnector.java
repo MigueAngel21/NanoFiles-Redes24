@@ -146,7 +146,7 @@ public class DirectoryConnector {
 			System.err.println("Your response is as large as the datagram reception buffer!!\n"
 					+ "You must extract from the buffer only the bytes that belong to the datagram!");
 		}
-		return responseData;
+		return response;
 	}
 
 	/**
