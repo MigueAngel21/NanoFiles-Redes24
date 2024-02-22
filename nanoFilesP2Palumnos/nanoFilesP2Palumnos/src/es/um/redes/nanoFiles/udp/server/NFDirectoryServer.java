@@ -87,8 +87,7 @@ public class NFDirectoryServer {
 	}
 
 	public void run() throws IOException {
-		byte[] receptionBuffer = null;
-		receptionBuffer = new byte[DirMessage.PACKET_MAX_SIZE];
+		
 		InetSocketAddress clientAddr = null;
 		int dataLength = -1;
 		/*
@@ -96,12 +95,14 @@ public class NFDirectoryServer {
 		 * asociado al búfer
 		 */
 		
-		 DatagramPacket packetFromClient = new DatagramPacket(receptionBuffer, receptionBuffer.length);
+		
 		System.out.println("Directory starting...");
 		
 		while (true) { // Bucle principal del servidor de directorio
+			byte[] receptionBuffer = null;
+			receptionBuffer = new byte[DirMessage.PACKET_MAX_SIZE];
+			DatagramPacket packetFromClient = new DatagramPacket(receptionBuffer, receptionBuffer.length);
 			
-
 			// TODO: (Boletín UDP) Recibimos a través del socket un datagrama
 
 			System.out.println("Waiting to receive datagram...");

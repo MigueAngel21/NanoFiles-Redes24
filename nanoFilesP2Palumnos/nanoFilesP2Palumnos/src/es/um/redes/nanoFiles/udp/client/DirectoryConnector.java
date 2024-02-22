@@ -128,7 +128,7 @@ public class DirectoryConnector {
 				cont++;
 				continue;
 			} catch (IOException e){
-				System.out.println("Error de entrada/salida en el socket");
+				System.out.println("Error al enviar o recibir el datagrama al directorio");
 				System.exit(-1);
 			}
 			break;
