@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "es.um.redes.nanoFiles.application.Directory",
             "projectName": "NanoFiles-Redes24_b093df4e",
-            "args": ["-loss 0.3"]
+            "args": ["-loss","0.3"]
         },
         {
             "type": "java",
