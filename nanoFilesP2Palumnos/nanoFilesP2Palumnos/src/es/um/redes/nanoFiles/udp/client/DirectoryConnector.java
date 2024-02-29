@@ -207,6 +207,19 @@ public class DirectoryConnector {
 		// DirMessage.fromString)
 		// TODO: 6.Extraer datos del objeto DirMessage y procesarlos (p.ej., sessionKey)
 		// TODO: 7.Devolver éxito/fracaso de la operación
+		DirMessage msglogin = new DirMessage(DirMessageOps.OPERATION_LOGIN);
+		msglogin.setNickname(nickname);
+		String strToSend = msglogin.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		boolean communicationOK = true;
+		try {
+			receiveData = sendAndReceiveDatagrams(dataToSend);
+		} catch (Exception e) {
+			// TODO: handle exception
+			
+		}
+		
 		String confirmacion = "loginok";
 		String mensaje = new String("login&"+nickname);
 		byte[] messageToServer = mensaje.getBytes();
