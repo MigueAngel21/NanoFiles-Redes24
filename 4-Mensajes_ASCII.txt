@@ -1,0 +1,150 @@
+MENSAJES ASCII
+------------------------
+CAMPOS DE LOS MENSAJES : 
+
+LOGIN :
+cliente->directorio
+operation:login\n
+nickname:alumno\n
+\n
+
+LOGINOK :
+directorio->cliente
+operation:loginok\n
+sessionkey:7456\n
+\n
+
+LOGINFAILED
+directorio->cliente
+operation:loginfailed\n
+\n
+
+LOGOUT
+cliente->directorio
+operation:logout\n
+nickname:alumno\n
+sessionkey:7456\n
+\n
+ 
+LOGOUTOK //comprobar que este bien
+directorio->cliente
+operation:logoutok\n
+\n
+
+LOGOUTFAILED
+directorio->cliente
+operation:logoutfailed\n
+\n
+
+USERLIST   //comprobar que este bien
+cliente->directorio
+operation:userlist\n
+\n
+
+USERLISTOK
+directorio->cliente
+operation:userlistok\n
+nickname:alumno\n
+isServer: true\n
+nickname: stalin\n
+isServer: false\n
+.
+.
+.
+\n
+
+USERLISTFAILED
+directorio->cliente
+operation:userlistfailed\n
+\n
+
+
+------------------------------------------------------
+SOLICITUD LOGIN:
+-Mensaje: login
+-Campos : DECLARADO ARRIBA
+-Operacion: solicitud de login
+-emisor: cualquier peer
+-receptor: servidor de directorio
+-Acciones : 1) ver si nickname esta en el HashMap de nicks
+	    2) si no esta en el HashMap, generar sessionkey , actualizar el mapa de nicks y sessionkeys, y enviar loginok
+	    3) si esta en el mapa de nicks y keys, enviar loginfailed
+
+SOLICITUD LOGINOK:
+-Mensaje: loginok
+-Campos : DECLARADO ARRIBA
+-Operacion: enviar loginok
+-emisor: servidor de directorio
+-receptor: el peer que solicito el login
+-Acciones : 1) ver si nickname esta en el HashMap de nicks
+	    2) si no esta en el HashMap, enviar moensaje loginok
+	    3) si esta en el mapa, enviar loginfailed
+
+SOLICITUD LOGINFAILED:
+-Mensaje: loginfailed
+-Campos : DECLARADO ARRIBA
+-Operacion: enviar loginfailed
+-emisor: servidor de directorio
+-receptor: el peer que solicito el login
+-Acciones : 1) si el nombre esta en el mapa, envia mensaje loginfailed
+	    2) cuando este mensaje llegue al peer, sera avisado de que no se puede registrar con ese nombre porque ya estaba previamente registrado
+
+SOLICITUD LOGOUT:
+-Mensaje: logout
+-Campos : DECLARADO ARRIBA
+-Operacion: solicitud de logout
+-emisor: cualquier peer
+-receptor: servidor de directorio
+-Acciones : 1) ver si el nombre esta registrado
+	    2) si no esta registrado , devuelve logoutfailed
+	    3) si esta en el mapa, elimina el usuario del mapa y tambien la sessionkey, y devuelve logoutok
+
+SOLICITUD LOGOUTOK:
+-Mensaje: logoutok
+-Campos : DECLARADO ARRIBA
+-Operacion: enviar logoutok
+-emisor:  servidor de directorio
+-receptor: el peer que solicito el logout
+-Acciones : 1) ver si el nombre esta registrado
+	    2) si esta en el mapa envia el mensaje al peer como que esta dado de baja
+	    3) si no esta en el mapa, enviar loginfailed
+
+SOLICITUD LOGOUTFAILED:
+-Mensaje: logoutfailed
+-Campos : DECLARADO ARRIBA
+-Operacion: enviar logoutfailed
+-emisor: servidor de directorio
+-receptor: el peer que solicito el logout
+-Acciones : 1) si el nombre no esta en el mapa, envia mensaje logoutfailed
+	    2) cuando este mensaje llegue al peer, sera avisado de que no se ha dado de baja 
+
+SOLICITUD USERLIST:
+-Mensaje: userlist
+-Campos : DECLARADO ARRIBA
+-Operacion: solicitud de userlist
+-emisor: cualquier peer
+-receptor: servidor de directorio
+-Acciones : 0) comprobar que el usuario este registrado
+	    1) comprobar que el mapa de nicks no este vacio 
+	    2) si no esta vacio, recorrer el mapa de nicks e ir generando el mensaje con los usuarios que esten registrados y enviar userlistok
+	    3) si esta vacio, userlistfailed
+
+SOLICITUD USERLISTOK:
+-Mensaje: userlistok
+-Campos : DECLARADO ARRIBA
+-Operacion: enviar userlistok
+-emisor: servidor de directorio
+-receptor: el peer que ha solicitado la lista de nombre registrados
+-Acciones : 0) comprobar que el usuario este registrado
+	    1) comprobar que el mapa de nicks no este vacio 
+	    2) si no esta vacio, enviar al usuario el mensaje con la lista de usuarios registrado
+	    3) si esta vacio, userlistfailed
+
+SOLICITUD USERLISTFAILED:
+-Mensaje: userlistfailed
+-Campos : DECLARADO ARRIBA
+-Operacion: enviar userlistfailed
+-emisor: servidor de directorio
+-receptor: el peer que ha solicitado el userlist
+-Acciones : 1) si esta vacio el mapa de nicks, userlistfailed
+	    2) cuando este mensaje llegue al peer, sera avisado de que no se puede mostrar la lista de usuarios 
