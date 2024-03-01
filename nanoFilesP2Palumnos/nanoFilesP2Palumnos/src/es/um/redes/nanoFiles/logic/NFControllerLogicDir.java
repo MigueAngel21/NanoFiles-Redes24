@@ -92,7 +92,16 @@ public class NFControllerLogicDir {
 		 * identificarse. Devolver éxito/fracaso de la operación.
 		 */
 		boolean result = false;
-
+		try {
+			boolean exito = directoryConnector.logoutFromDirectory();
+			if (exito){
+				System.out.println("Cierre de sesión con éxito");
+			} else {
+				System.err.println("Error de cierre de sesión: Logout");
+			}
+		} catch (Exception e) {
+			System.out.println("Error de cierre de sesion");
+		}
 
 
 		return result;

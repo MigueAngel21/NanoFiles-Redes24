@@ -274,10 +274,25 @@ public class DirectoryConnector {
 	 */
 	public boolean logoutFromDirectory() {
 		// TODO: Ver TODOs en logIntoDirectory y seguir esquema similar
+		boolean success = false;
+		DirMessage msglogout = new DirMessage(DirMessageOps.OPERATION_LOGOUT);
+		msglogout.setSessionKey(Integer.toString(getSessionKey()));
+		String strToSend = msglogout.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		receiveData = sendAndReceiveDatagrams(dataToSend);
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_LOGOUT_OK)) {
+			success = true;
+			sessionKey = INVALID_SESSION_KEY;
+			System.out.println("Logout correcto");
+			success = true;
+		} else {
+			System.err.println("Error de cierre de sesion: "+operation);
+		}
 
-
-
-		return false;
+		return success;
 	}
 
 	/**

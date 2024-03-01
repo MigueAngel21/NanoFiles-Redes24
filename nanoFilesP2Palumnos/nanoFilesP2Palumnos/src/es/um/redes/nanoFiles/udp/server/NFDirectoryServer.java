@@ -237,12 +237,21 @@ public class NFDirectoryServer {
 			 * servidor
 			 */
 			System.out.println("Login: " + username + " " + response.getOperation());
-			
-
+			break;
+		}
+		case DirMessageOps.OPERATION_LOGOUT: {
+			int clave = Integer.parseInt(msg.getSessionKey());
+			if (!(sessionKeys.containsKey(clave))) {
+				response = new DirMessage(DirMessageOps.OPERATION_LOGOUT_FAIL);
+			} else {
+				String username = sessionKeys.get(clave);
+				nicks.remove(username);
+				sessionKeys.remove(clave);
+				response = new DirMessage(DirMessageOps.OPERATION_LOGOUT_OK);
+			}
 
 			break;
 		}
-
 
 
 		default:

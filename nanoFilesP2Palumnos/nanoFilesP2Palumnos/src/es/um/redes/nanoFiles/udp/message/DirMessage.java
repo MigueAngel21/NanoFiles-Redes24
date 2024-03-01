@@ -168,7 +168,6 @@ public class DirMessage {
 			case DirMessageOps.OPERATION_LOGIN_FAIL:	//no hay nada que hacer
 				break;
 			case DirMessageOps.OPERATION_LOGOUT:
-				sb.append(FIELDNAME_NICKNAME + DELIMITER + nickname + END_LINE);
 				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
 				break;
 			case DirMessageOps.OPERATION_LOGOUT_OK:		//no hay nada que hacer
