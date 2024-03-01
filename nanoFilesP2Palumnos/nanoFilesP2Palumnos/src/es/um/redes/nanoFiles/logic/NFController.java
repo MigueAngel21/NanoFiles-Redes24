@@ -237,7 +237,12 @@ public class NFController {
 				System.err.println("* You cannot login because you are not logged out from the directory");
 			}
 			break;
-
+		case NFCommands.COM_LOGOUT:
+			if (currentState != LOGGED_IN) {
+				commandAllowed = false;
+				System.err.println("* You cannot logout because you are not logged in the directory");
+			}
+			break;
 
 
 		default:
@@ -261,7 +266,10 @@ public class NFController {
 			currentState = LOGGED_IN;
 			break;
 		}
-
+		case NFCommands.COM_LOGOUT: {
+			currentState = LOGGED_OUT;
+			break;
+		}
 
 
 		default:

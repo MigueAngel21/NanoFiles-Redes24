@@ -67,6 +67,7 @@ public class NFControllerLogicDir {
 			boolean exito = directoryConnector.logIntoDirectory(nickname);
 			if (exito){
 				System.out.println("Inicio de sesión con éxito con la clave de sesión: "+exito);
+				result = true;
 			} else {
 				System.err.println("Error de inicio de sesión: Login");
 			}
@@ -96,6 +97,7 @@ public class NFControllerLogicDir {
 			boolean exito = directoryConnector.logoutFromDirectory();
 			if (exito){
 				System.out.println("Cierre de sesión con éxito");
+				result = true;
 			} else {
 				System.err.println("Error de cierre de sesión: Logout");
 			}

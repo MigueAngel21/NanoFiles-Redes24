@@ -22,7 +22,6 @@ operation:loginfailed\n
 LOGOUT
 cliente->directorio
 operation:logout\n
-nickname:alumno\n
 sessionkey:7456\n
 \n
  
