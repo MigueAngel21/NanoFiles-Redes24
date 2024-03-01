@@ -13,7 +13,9 @@ public class DirMessageOps {
 	public static final String OPERATION_LOGOUT = "logout";				//mensaje de desconexion
 	public static final String OPERATION_LOGOUT_OK = "logoutOk"; 		//mensaje bien
 	public static final String OPERATION_LOGOUT_FAIL = "logoutFail";	//mensaje de desconexion fallida
-
+	public static final String OPERATION_USERLIST = "userList";			//lista de usuarios
+	public static final String OPERATION_USERLIST_OK = "userListOk";	//mensaje bien
+	public static final String OPERATION_USERLIST_FAIL = "userListFail";//mensaje de fallo
 
 
 

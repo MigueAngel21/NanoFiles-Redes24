@@ -141,32 +141,10 @@ public class NFDirectoryServer {
 				 */
 				messageFromClient = new String(receptionBuffer,0,packetFromClient.getLength());	//login&nickname en string
 
-				String[] segmentos = messageFromClient.split("&");
-				String username = segmentos[1];
-				String login = segmentos[0];
+				DirMessage mensajeServer = DirMessage.fromString(messageFromClient);
+				
 
-
-				if (NanoFiles.testMode) { // En modo de prueba (mensajes en "crudo", boletín UDP)
-					System.out.println("[testMode] Contents interpreted as " + dataLength + "-byte String: \""
-							+ messageFromClient + "\"");
-					/*
-					 * TODO: (Boletín UDP) Comprobar que se ha recibido un datagrama con la cadena
-					 * "login" y en ese caso enviar como respuesta un mensaje al cliente con la
-					 * cadena "loginok". Si el mensaje recibido no es "login", se informa del error
-					 * y no se envía ninguna respuesta.
-					 */
-					if (messageFromClient.equals("login")) {
-						String mensaje=new String(messageFromClient+"ok");
-						byte[] datatoclient=mensaje.getBytes();
-						DatagramPacket packetToClient = new DatagramPacket(datatoclient, datatoclient.length, clientAddr);
-						socket.send(packetToClient);
-					} else{
-						System.err.println("Error de inicio de sesion");
-					}
-
-
-
-				} else { // Servidor funcionando en modo producción (mensajes bien formados)
+				 // Servidor funcionando en modo producción (mensajes bien formados)
 
 					// Vemos si el mensaje debe ser ignorado por la probabilidad de descarte
 					double rand = Math.random();
@@ -174,23 +152,11 @@ public class NFDirectoryServer {
 						System.err.println("Directory DISCARDED datagram from " + clientAddr);
 						continue;
 					}
-					if (nicks.containsKey(username)) {
-						String mensaje=new String("Login_failed: -1");
-						byte[] respuesta = mensaje.getBytes();
-						DatagramPacket packetToClient = new DatagramPacket(respuesta,respuesta.length,clientAddr);
-						socket.send(packetToClient);
-					} else{
-						if (login.equals("login")) {
-							int clave = random.nextInt(10000);
-							nicks.put(username, clave);
-							String mensaje=new String("loginok&"+clave);
-							byte[] datatoclient=mensaje.getBytes();
-							DatagramPacket packetToClient = new DatagramPacket(datatoclient, datatoclient.length, clientAddr);
-							socket.send(packetToClient);
-						} else{
-							System.err.println("Error de inicio de sesion");
-						}
-				}
+
+					String mensaje = buildResponseFromRequest(mensajeServer, clientAddr).toString();	//Llama a la funcion que devuelve el mensaje de respuesta
+					byte[] respuesta = mensaje.getBytes();
+					DatagramPacket packetToClient = new DatagramPacket(respuesta,respuesta.length,clientAddr);
+					socket.send(packetToClient);
 
 					/*
 					 * TODO: Construir String partir de los datos recibidos en el datagrama. A
@@ -213,7 +179,7 @@ public class NFDirectoryServer {
 
 
 
-				}
+				
 			} else {
 				System.err.println("Directory ignores EMPTY datagram from " + clientAddr);
 			}
@@ -238,13 +204,28 @@ public class NFDirectoryServer {
 		switch (operation) {
 		case DirMessageOps.OPERATION_LOGIN: {
 			String username = msg.getNickname();
-
+			
 			/*
 			 * TODO: Comprobamos si tenemos dicho usuario registrado (atributo "nicks"). Si
 			 * no está, generamos su sessionKey (número aleatorio entre 0 y 1000) y añadimos
 			 * el nick y su sessionKey asociada. NOTA: Puedes usar random.nextInt(10000)
 			 * para generar la session key
 			 */
+
+			 if (nicks.containsKey(username)) {
+				response = new DirMessage(DirMessageOps.OPERATION_LOGIN_FAIL);
+				
+			} else{
+				int clave = random.nextInt(10000);
+				while (sessionKeys.containsKey(clave)) {
+					clave = random.nextInt(10000);
+				}
+				nicks.put(username, clave);
+				sessionKeys.put(clave, username);
+				response = new DirMessage(DirMessageOps.OPERATION_LOGIN_OK);
+				response.setSessionKey(Integer.toString(clave));
+			}
+
 			/*
 			 * TODO: Construimos un mensaje de respuesta que indique el éxito/fracaso del
 			 * login y contenga la sessionKey en caso de éxito, y lo devolvemos como
@@ -255,7 +236,8 @@ public class NFDirectoryServer {
 			 * (éxito o fracaso) con los datos relevantes, a modo de depuración en el
 			 * servidor
 			 */
-
+			System.out.println("Login: " + username + " " + response.getOperation());
+			
 
 
 			break;

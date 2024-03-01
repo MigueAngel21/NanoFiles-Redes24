@@ -212,15 +212,21 @@ public class DirectoryConnector {
 		String strToSend = msglogin.toString();
 		byte[] dataToSend = strToSend.getBytes();
 		byte[] receiveData = null;
-		boolean communicationOK = true;
-		try {
-			receiveData = sendAndReceiveDatagrams(dataToSend);
-		} catch (Exception e) {
-			// TODO: handle exception
-			
+		//boolean communicationOK = true;	//Preguntar al profesor
+		receiveData = sendAndReceiveDatagrams(dataToSend);	//Contiene el mensaje de respuesta en forma de array de bytes
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_LOGIN_OK)) {
+			success = true;
+			sessionKey = Integer.parseInt(response.getSessionKey());
+			System.out.println("Login correcto con la clave: "+sessionKey);
+		} else {
+			System.err.println("Error de inicio de sesion: "+operation);
 		}
 		
-		String confirmacion = "loginok";
+
+		/*
+		String confirmacion = "loginok";				//codigo en forma de texto crudo
 		String mensaje = new String("login&"+nickname);
 		byte[] messageToServer = mensaje.getBytes();
 		byte[] responseFromServer = sendAndReceiveDatagrams(messageToServer);
@@ -239,6 +245,7 @@ public class DirectoryConnector {
 				System.err.println("Error de inicio de sesion");
 		}
 	}
+	*/
 
 		return success;
 	}

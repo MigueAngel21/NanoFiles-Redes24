@@ -21,7 +21,7 @@ public class DirMessage {
 
 	private static final char DELIMITER = ':'; // Define el delimitador
 	private static final char END_LINE = '\n'; // Define el carácter de fin de línea
-
+	private static final String END_LINE_STR = "\n"; // Define el carácter de fin de línea
 	/**
 	 * Nombre del campo que define el tipo de mensaje (primera línea)
 	 */
@@ -31,7 +31,7 @@ public class DirMessage {
 	 * aparecer en los mensajes de este protocolo (formato campo:valor)
 	 */
 	private static final String FIELDNAME_NICKNAME = "nickname";
-	private static final String FIELDNAME_SESSIONKEY = "sessionKey";
+	private static final String FIELDNAME_SESSIONKEY = "sessionkey";
 
 	/**
 	 * Tipo del mensaje, de entre los tipos definidos en PeerMessageOps.
@@ -42,7 +42,7 @@ public class DirMessage {
 	 * diferentes mensajes de este protocolo.
 	 */
 	private String nickname;
-	private String sessionkey; //mirar int
+	private String sessionkey; //parsear a int cuando haya que meter la clave al mapa
 
 
 
@@ -127,26 +127,8 @@ public class DirMessage {
 				m.setSessionKey(value);
 				break;
 			}
-			/*
-			case FIELDNAME_LOGINFAILED:{	//falta implementar
-				assert (m != null);
+			case END_LINE_STR: // Ignoramos las líneas en blanco
 				break;
-			}
-			case FIELDNAME_LOGOUT:{			//falta implementar
-				assert (m != null);
-				break;
-			}
-
-			case FIELDNAME_LOGOUT_OK:{		//falta implementar
-				assert (m != null);
-				break;
-			}
-
-			case FIELDNAME_LOGOUT_FAIL:{	//falta implementar
-				assert (m != null);
-				break;
-			}
-			*/
 			default:
 				System.err.println("PANIC: DirMessage.fromString - message with unknown field name " + fieldName);
 				System.err.println("Message was:\n" + message);
@@ -183,9 +165,28 @@ public class DirMessage {
 			case DirMessageOps.OPERATION_LOGIN_OK:
 				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
 				break;
+			case DirMessageOps.OPERATION_LOGIN_FAIL:	//no hay nada que hacer
+				break;
+			case DirMessageOps.OPERATION_LOGOUT:
+				sb.append(FIELDNAME_NICKNAME + DELIMITER + nickname + END_LINE);
+				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
+				break;
+			case DirMessageOps.OPERATION_LOGOUT_OK:		//no hay nada que hacer
+				break;
+			case DirMessageOps.OPERATION_LOGOUT_FAIL:	//no hay nada que hacer
+				break;
+			/*
+			case DirMessageOps.OPERATION_USERLIST:		//no hay nada que hacer
+				break;
+			case DirMessageOps.OPERATION_USERLIST_OK:
+
+				break;
+			case DirMessageOps.OPERATION_USERLIST_FAIL:
+				break;
 			default:	//los break salen por el default
 				break;
-		}
+			*/
+			}
 
 
 		sb.append(END_LINE); // Marcamos el final del mensaje
