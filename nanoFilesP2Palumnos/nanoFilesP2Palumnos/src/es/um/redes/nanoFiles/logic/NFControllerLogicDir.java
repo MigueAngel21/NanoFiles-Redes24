@@ -119,8 +119,26 @@ public class NFControllerLogicDir {
 		 * e imprimirla por pantalla. Devolver éxito/fracaso de la operación.
 		 */
 		boolean result = false;
-
-
+		try {
+			LinkedList<String> lista = directoryConnector.getUserList();
+			if (lista != null) {
+				result = true;
+				System.out.println("Lista de usuarios registrados: ");
+				for (String nick : lista) {
+					if (lista.indexOf(nick) == lista.size()-1){
+						System.out.print(nick);
+					} else {
+						System.out.print(nick + ", ");
+					}
+					System.out.println("\n");
+					
+				}
+			} else {
+				System.err.println("Error: the user list is empty");
+			}
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 
 		return result;
 	}

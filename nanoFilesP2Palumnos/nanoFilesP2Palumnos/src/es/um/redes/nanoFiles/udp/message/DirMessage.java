@@ -32,6 +32,7 @@ public class DirMessage {
 	 */
 	private static final String FIELDNAME_NICKNAME = "nickname";
 	private static final String FIELDNAME_SESSIONKEY = "sessionkey";
+	private static final String FIELDNAME_USERLIST = "users";
 
 	/**
 	 * Tipo del mensaje, de entre los tipos definidos en PeerMessageOps.
@@ -43,7 +44,7 @@ public class DirMessage {
 	 */
 	private String nickname;
 	private String sessionkey; //parsear a int cuando haya que meter la clave al mapa
-
+	private LinkedList<String> users;
 
 
 	public DirMessage(String op) {
@@ -79,6 +80,14 @@ public class DirMessage {
 		sessionkey = key;
 	}
 
+	public LinkedList<String> getUserList() {
+		return users;
+	}
+
+	public void setUserList(LinkedList<String> list) {
+		assert(operation.equals(DirMessageOps.OPERATION_USERLIST_OK));
+		users = list;
+	}
 
 
 	/**
@@ -127,6 +136,17 @@ public class DirMessage {
 				m.setSessionKey(value);
 				break;
 			}
+			case FIELDNAME_USERLIST:{
+				assert (m != null);
+				String[] users = value.split(",");
+				LinkedList<String> userList = new LinkedList<String>();
+				for (String user : users) {
+					userList.add(user);
+				}
+				m.setUserList(userList);
+				break;
+			}
+
 			case END_LINE_STR: // Ignoramos las líneas en blanco
 				break;
 			default:
@@ -174,17 +194,33 @@ public class DirMessage {
 				break;
 			case DirMessageOps.OPERATION_LOGOUT_FAIL:	//no hay nada que hacer
 				break;
-			/*
+			
 			case DirMessageOps.OPERATION_USERLIST:		//no hay nada que hacer
+				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
 				break;
 			case DirMessageOps.OPERATION_USERLIST_OK:
+				//haz para que imprima la ", " solo si no es el último nick, es decir, si no es el "nick" que está en la última posición de "lista
+				String usuarios = "";
+				for (String nick : users) {
+					if (users.indexOf(nick) == users.size()-1){
+						usuarios += nick;
+					} else {
+						usuarios += nick + ",";
+					}
+					
+				}	
 
+
+
+
+				
+				sb.append(FIELDNAME_USERLIST + DELIMITER + usuarios + END_LINE);
 				break;
 			case DirMessageOps.OPERATION_USERLIST_FAIL:
 				break;
 			default:	//los break salen por el default
 				break;
-			*/
+			
 			}
 
 

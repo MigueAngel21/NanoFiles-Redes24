@@ -252,7 +252,24 @@ public class NFDirectoryServer {
 
 			break;
 		}
-
+		case DirMessageOps.OPERATION_USERLIST: {
+			int clave = Integer.parseInt(msg.getSessionKey());
+			if (!(sessionKeys.containsKey(clave))) {
+				response = new DirMessage(DirMessageOps.OPERATION_USERLIST_FAIL);
+				System.err.println("Userlist failed: session key not found");
+			} else {
+				System.out.println("Recieve userlist request from " + clientAddr);
+				System.out.println("Client " + clientAddr + "successfully obteined userlist");
+				response = new DirMessage(DirMessageOps.OPERATION_USERLIST_OK);
+				LinkedList<String> userlist = new LinkedList<String>();
+				for (String user : nicks.keySet()) {
+					userlist.add(user);
+				}
+				response.setUserList(userlist);
+				
+				System.out.println("Sent userlist reponse to " + clientAddr);
+			}
+		}
 
 		default:
 			System.out.println("Unexpected message operation: \"" + operation + "\"");

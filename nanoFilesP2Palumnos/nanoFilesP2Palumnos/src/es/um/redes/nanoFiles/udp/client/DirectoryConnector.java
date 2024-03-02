@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
+import java.util.LinkedList;
 
 import javax.print.DocFlavor.STRING;
 
@@ -258,10 +259,24 @@ public class DirectoryConnector {
 	 * @return La lista de nombres de usuario registrados, o null si el directorio
 	 *         no pudo satisfacer nuestra solicitud
 	 */
-	public String[] getUserList() {
-		String[] userlist = null;
+	public LinkedList<String> getUserList() {
+		LinkedList<String> userlist = new LinkedList<String>();
 		// TODO: Ver TODOs en logIntoDirectory y seguir esquema similar
-
+		DirMessage msguserlist = new DirMessage(DirMessageOps.OPERATION_USERLIST);
+		msguserlist.setSessionKey(Integer.toString(getSessionKey()));
+		String strToSend = msguserlist.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		receiveData = sendAndReceiveDatagrams(dataToSend);
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_USERLIST_OK)) {
+			userlist = response.getUserList();
+			System.out.println("Lista de usuarios obtenida");
+		} else {
+			System.err.println("Error de obtencion de lista de usuarios: "+operation);
+		}
+		
 
 
 		return userlist;

@@ -243,7 +243,11 @@ public class NFController {
 				System.err.println("* You cannot logout because you are not logged in the directory");
 			}
 			break;
-
+		case NFCommands.COM_USERLIST:
+			if (currentState != LOGGED_IN) {
+				commandAllowed = false;
+				System.err.println("* You cannot list users because you are not logged in the directory");
+			}
 
 		default:
 			// System.err.println("ERROR: undefined behaviour for " + currentCommand + "
@@ -270,7 +274,9 @@ public class NFController {
 			currentState = LOGGED_OUT;
 			break;
 		}
-
+		case NFCommands.COM_USERLIST: {
+			break;	//no cambia el estado
+		}
 
 		default:
 		}
