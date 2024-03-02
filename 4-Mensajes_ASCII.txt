@@ -38,6 +38,7 @@ operation:logoutfailed\n
 USERLIST   //comprobar que este bien
 cliente->directorio
 operation:userlist\n
+sessionkey:5498\n
 \n
 
 USERLISTOK
