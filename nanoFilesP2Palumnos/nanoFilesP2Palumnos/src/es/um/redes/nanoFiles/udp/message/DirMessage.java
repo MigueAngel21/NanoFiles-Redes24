@@ -199,7 +199,6 @@ public class DirMessage {
 				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
 				break;
 			case DirMessageOps.OPERATION_USERLIST_OK:
-				//haz para que imprima la ", " solo si no es el último nick, es decir, si no es el "nick" que está en la última posición de "lista
 				String usuarios = "";
 				for (String nick : users) {
 					if (users.indexOf(nick) == users.size()-1){
