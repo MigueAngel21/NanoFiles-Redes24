@@ -208,10 +208,6 @@ public class DirMessage {
 					}
 					
 				}	
-
-
-
-
 				
 				sb.append(FIELDNAME_USERLIST + DELIMITER + usuarios + END_LINE);
 				break;

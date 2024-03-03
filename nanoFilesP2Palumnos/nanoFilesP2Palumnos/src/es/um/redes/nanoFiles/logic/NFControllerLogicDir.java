@@ -130,9 +130,8 @@ public class NFControllerLogicDir {
 					} else {
 						System.out.print(nick + ", ");
 					}
-					System.out.println("\n");
-					
 				}
+				System.out.println();
 			} else {
 				System.err.println("Error: the user list is empty");
 			}

@@ -269,8 +269,9 @@ public class NFDirectoryServer {
 				
 				System.out.println("Sent userlist reponse to " + clientAddr);
 			}
+			break;
 		}
-
+		
 		default:
 			System.out.println("Unexpected message operation: \"" + operation + "\"");
 		}
