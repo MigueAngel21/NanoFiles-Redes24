@@ -1,50 +1,140 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 6.4.--><structure>
-	<type>fa</type>
-	<automaton>
-		<!--The list of states.-->
-		<state id="0" name="q0">
-			<x>61.0</x>
-			<y>178.0</y>
-			<initial/>
-		</state>
-		<state id="1" name="q1">
-			<x>250.0</x>
-			<y>233.0</y>
-		</state>
-		<state id="2" name="q2">
-			<x>423.0</x>
-			<y>235.0</y>
-		</state>
-		<state id="3" name="q3">
-			<x>67.0</x>
-			<y>287.0</y>
-			<final/>
-		</state>
-		<!--The list of transitions.-->
-		<transition>
-			<from>2</from>
-			<to>1</to>
-			<read>snd(login)</read>
-		</transition>
-		<transition>
-			<from>1</from>
-			<to>0</to>
-			<read>rcv(login_failed)</read>
-		</transition>
-		<transition>
-			<from>1</from>
-			<to>2</to>
-			<read>timeout</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>1</to>
-			<read>snd(login)</read>
-		</transition>
-		<transition>
-			<from>1</from>
-			<to>3</to>
-			<read>rcv(login_ok)</read>
-		</transition>
-	</automaton>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 6.4.--><structure>&#13;
+	<type>fa</type>&#13;
+	<automaton>&#13;
+		<!--The list of states.-->&#13;
+		<state id="0" name="q0">&#13;
+			<x>43.0</x>&#13;
+			<y>152.0</y>&#13;
+			<initial/>&#13;
+			<final/>&#13;
+		</state>&#13;
+		<state id="1" name="q1">&#13;
+			<x>261.0</x>&#13;
+			<y>185.0</y>&#13;
+		</state>&#13;
+		<state id="2" name="q2">&#13;
+			<x>412.0</x>&#13;
+			<y>184.0</y>&#13;
+		</state>&#13;
+		<state id="3" name="q3">&#13;
+			<x>67.0</x>&#13;
+			<y>287.0</y>&#13;
+			<final/>&#13;
+		</state>&#13;
+		<state id="4" name="q4">&#13;
+			<x>269.0</x>&#13;
+			<y>294.0</y>&#13;
+		</state>&#13;
+		<state id="5" name="q5">&#13;
+			<x>466.0</x>&#13;
+			<y>215.0</y>&#13;
+		</state>&#13;
+		<state id="6" name="q6">&#13;
+			<x>124.0</x>&#13;
+			<y>447.0</y>&#13;
+		</state>&#13;
+		<state id="7" name="q7">&#13;
+			<x>238.0</x>&#13;
+			<y>407.0</y>&#13;
+		</state>&#13;
+		<!--The list of transitions.-->&#13;
+		<transition>&#13;
+			<from>6</from>&#13;
+			<to>3</to>&#13;
+			<read>rcv(logoutFail)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>6</from>&#13;
+			<to>7</to>&#13;
+			<read>timeout</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>2</from>&#13;
+			<to>1</to>&#13;
+			<read>snd(login)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>1</from>&#13;
+			<to>3</to>&#13;
+			<read>rcv(login_ok)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>2</from>&#13;
+			<to>0</to>&#13;
+			<controlx>243</controlx>&#13;
+			<controly>53</controly>&#13;
+			<read>x timeouts</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>5</from>&#13;
+			<to>3</to>&#13;
+			<controlx>248</controlx>&#13;
+			<controly>224</controly>&#13;
+			<read>x timeouts</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>3</from>&#13;
+			<to>6</to>&#13;
+			<read>snd(logout</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>7</from>&#13;
+			<to>3</to>&#13;
+			<read>x timeouts</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>0</from>&#13;
+			<to>1</to>&#13;
+			<read>snd(login)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>7</from>&#13;
+			<to>6</to>&#13;
+			<read>snd(logout</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>1</from>&#13;
+			<to>0</to>&#13;
+			<read>rcv(login_failed)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>3</from>&#13;
+			<to>4</to>&#13;
+			<read>snd(userlist)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>1</from>&#13;
+			<to>2</to>&#13;
+			<read>timeout</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>4</from>&#13;
+			<to>3</to>&#13;
+			<read>rcv(userlistFail)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>4</from>&#13;
+			<to>5</to>&#13;
+			<controlx>404</controlx>&#13;
+			<controly>343</controly>&#13;
+			<read>timeout</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>5</from>&#13;
+			<to>4</to>&#13;
+			<read>snd(userlist)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>6</from>&#13;
+			<to>0</to>&#13;
+			<controlx>-26</controlx>&#13;
+			<controly>396</controly>&#13;
+			<read>rcv(logoutOk)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>4</from>&#13;
+			<to>3</to>&#13;
+			<read>rcv(userlistOk)</read>&#13;
+		</transition>&#13;
+	</automaton>&#13;
 </structure>
