@@ -14,7 +14,7 @@ operation:loginok\n
 sessionkey:7456\n
 \n
 
-LOGINFAILED
+LOGINFAIL
 directorio->cliente
 operation:loginfailed\n
 \n
@@ -52,6 +52,21 @@ directorio->cliente
 operation:userlistfailed\n
 \n
 
+FGSERVE
+cliente->directorio
+operation:fgserve\n
+sessionkey:5498\n
+\n
+
+FGSERVEOK
+directorio->cliente
+operation:fgserveOk\n
+\n
+
+FGSERVEFAIL
+directorio->cliente
+fgserveFail\n
+\n
 
 ------------------------------------------------------
 SOLICITUD LOGIN:
