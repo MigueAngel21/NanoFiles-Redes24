@@ -44,13 +44,7 @@ sessionkey:5498\n
 USERLISTOK
 directorio->cliente
 operation:userlistok\n
-nickname:alumno\n
-isServer: true\n
-nickname: stalin\n
-isServer: false\n
-.
-.
-.
+users : benja,antonio,miguel...\n
 \n
 
 USERLISTFAILED
