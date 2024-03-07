@@ -7,7 +7,6 @@
 			<y>152.0</y>&#13;
 			<label>LOGGED_OUT</label>&#13;
 			<initial/>&#13;
-			<final/>&#13;
 		</state>&#13;
 		<state id="1" name="q1">&#13;
 			<x>261.0</x>&#13;
@@ -21,9 +20,8 @@
 		</state>&#13;
 		<state id="3" name="q3">&#13;
 			<x>67.0</x>&#13;
-			<y>287.0</y>&#13;
+			<y>283.0</y>&#13;
 			<label>LOGGED_IN</label>&#13;
-			<final/>&#13;
 		</state>&#13;
 		<state id="4" name="q4">&#13;
 			<x>269.0</x>&#13;
@@ -49,6 +47,12 @@
 			<x>619.0</x>&#13;
 			<y>295.0</y>&#13;
 			<label>Abortado</label>&#13;
+			<final/>&#13;
+		</state>&#13;
+		<state id="9" name="q9">&#13;
+			<x>214.0</x>&#13;
+			<y>49.0</y>&#13;
+			<label>FINISHED</label>&#13;
 			<final/>&#13;
 		</state>&#13;
 		<!--The list of transitions.-->&#13;
@@ -117,6 +121,11 @@
 			<from>4</from>&#13;
 			<to>3</to>&#13;
 			<read>rcv(userlistFail)</read>&#13;
+		</transition>&#13;
+		<transition>&#13;
+			<from>0</from>&#13;
+			<to>9</to>&#13;
+			<read>quit_command</read>&#13;
 		</transition>&#13;
 		<transition>&#13;
 			<from>0</from>&#13;
