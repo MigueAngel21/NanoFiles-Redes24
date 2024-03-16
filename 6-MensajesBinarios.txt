@@ -1,0 +1,45 @@
+MENSAJE :    DOWNLOAD ( downloadfrom <ip:puerto> <fragmentoHash> <namefile>)
+			( MEJORA  :  download <fragmentoHash> <namefile>)
+
+Mensaje :    OpCode 	Hashlenght	FileHash
+          ---------------------------------------
+	    1 byte(1)    1 byte          n bytes (te lo dice el lenght)
+Formato : TLV
+Direccion : peer cliente -> peer servidor
+Desciprcion : Este mensaje lo envia el peer clinete al peer servior de ficheros para la solicitud
+	      de descarga de un fichero a partir de un hash (o parte de el)
+Ejemplo :  OpCode 	Hashlenght	FileHash
+          ---------------------------------------
+	     1             4             "3gy6"  (El filehash que se ponga, su tamaño hay que ponerlo en hashlength)     
+
+
+//SOLO HACER LO MISMO CON LA DEVOLUCION DEL DOWNLOAD Y CON EL FILENOTFOUND
+//SOLO CON ESOS Y YA ESTA
+ 
+MENSAJE :  FILENOTFOUND
+Mensaje:  OpCode 
+	----------
+	 1 byte(3)
+Formato : CONTROL
+Sentido de la comunicación : peer servidor de ficheros -> peer cliente 
+Descripción : Este mensaje lo envía el par servidor de ficheros al par cliente (receptor) de 
+	      fichero para indicar que no es posible encontrar el fichero con la información proporcionada 
+	      en el mensaje de petición de descarga. Supondremos que tambien se incluye en este mensaje
+	      la posible ambiguedad que pueda haber.
+Ejemplo :   OpCode
+	   ---------
+	      3
+
+
+
+MENSAJE :  FILEDATA
+Mensaje :  OpCode 	Datalenght	FileData
+          ---------------------------------------
+	   1 byte(2)    1/2/4/8 bytes   n bytes (te lo dice el lenght)
+Formato : TLV
+Sentido de la comunicacion : peer sevidor de ficheros -> peer clinete
+Descripccion : Este mensaje lo envia el peer servidor de ficheros al peer clinete entregandole el 
+	       archivo que el peer solicito descargar.
+Ejemplo : OpCode 	Datalenght	FileData
+          ---------------------------------------
+	    2             23       hola esto es una prueba (en bytes)
