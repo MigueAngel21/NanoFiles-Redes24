@@ -261,9 +261,9 @@ public class NFDirectoryServer {
 				System.out.println("Recieve userlist request from " + clientAddr);
 				System.out.println("Client " + clientAddr + "successfully obteined userlist");
 				response = new DirMessage(DirMessageOps.OPERATION_USERLIST_OK);
-				LinkedList<String> userlist = new LinkedList<String>();
-				for (String user : nicks.keySet()) {
-					userlist.add(user);
+				String[] userlist = new String[nicks.size()];
+				for (int i = 0; i < nicks.size(); i++) {
+					userlist[i] = (String) nicks.keySet().toArray()[i];
 				}
 				response.setUserList(userlist);
 				

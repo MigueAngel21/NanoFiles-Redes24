@@ -120,15 +120,15 @@ public class NFControllerLogicDir {
 		 */
 		boolean result = false;
 		try {
-			LinkedList<String> lista = directoryConnector.getUserList();
+			String[] lista = directoryConnector.getUserList();
 			if (lista != null) {
 				result = true;
 				System.out.println("Lista de usuarios registrados: ");
-				for (String nick : lista) {
-					if (lista.indexOf(nick) == lista.size()-1){
-						System.out.print(nick);
+				for (int i = 0; i < lista.length; i++) {
+					if (i == lista.length - 1) {
+						System.out.print(lista[i]);
 					} else {
-						System.out.print(nick + ", ");
+						System.out.print(lista[i]+", ");
 					}
 				}
 				System.out.println();

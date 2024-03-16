@@ -259,9 +259,9 @@ public class DirectoryConnector {
 	 * @return La lista de nombres de usuario registrados, o null si el directorio
 	 *         no pudo satisfacer nuestra solicitud
 	 */
-	public LinkedList<String> getUserList() {
+	public String[] getUserList() {
 		assert (sessionKey != INVALID_SESSION_KEY);
-		LinkedList<String> userlist = new LinkedList<String>();
+		String[] userlist = null;
 		// TODO: Ver TODOs en logIntoDirectory y seguir esquema similar
 		DirMessage msguserlist = new DirMessage(DirMessageOps.OPERATION_USERLIST);
 		msguserlist.setSessionKey(Integer.toString(getSessionKey()));

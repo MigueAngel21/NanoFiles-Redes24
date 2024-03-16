@@ -44,7 +44,7 @@ public class DirMessage {
 	 */
 	private String nickname;
 	private String sessionkey; //parsear a int cuando haya que meter la clave al mapa
-	private LinkedList<String> users;
+	private String[] users;
 
 
 	public DirMessage(String op) {
@@ -80,11 +80,11 @@ public class DirMessage {
 		sessionkey = key;
 	}
 
-	public LinkedList<String> getUserList() {
+	public String[] getUserList() {
 		return users;
 	}
 
-	public void setUserList(LinkedList<String> list) {
+	public void setUserList(String[] list) {
 		assert(operation.equals(DirMessageOps.OPERATION_USERLIST_OK));
 		users = list;
 	}
@@ -139,9 +139,9 @@ public class DirMessage {
 			case FIELDNAME_USERLIST:{
 				assert (m != null);
 				String[] users = value.split(",");
-				LinkedList<String> userList = new LinkedList<String>();
-				for (String user : users) {
-					userList.add(user);
+				String[] userList = new String[users.length];
+				for (int i = 0; i < users.length; i++) {
+					userList[i] = users[i];
 				}
 				m.setUserList(userList);
 				break;
@@ -200,13 +200,12 @@ public class DirMessage {
 				break;
 			case DirMessageOps.OPERATION_USERLIST_OK:
 				String usuarios = "";
-				for (String nick : users) {
-					if (users.indexOf(nick) == users.size()-1){
-						usuarios += nick;
+				for (int i = 0; i < users.length; i++) {
+					if (i == users.length - 1) {
+						usuarios += users[i];
 					} else {
-						usuarios += nick + ",";
+						usuarios += users[i] + ",";
 					}
-					
 				}	
 				
 				sb.append(FIELDNAME_USERLIST + DELIMITER + usuarios + END_LINE);

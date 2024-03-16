@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PeerMessageTest",
+            "request": "launch",
+            "mainClass": "es.um.redes.nanoFiles.tcp.message.PeerMessageTest",
+            "projectName": "NanoFiles-Redes24_b093df4e"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -16,7 +23,10 @@
             "request": "launch",
             "mainClass": "es.um.redes.nanoFiles.application.Directory",
             "projectName": "NanoFiles-Redes24_b093df4e",
-            "args": ["-loss","0.0"]
+            "args": [
+                "-loss",
+                "0.0"
+            ]
         },
         {
             "type": "java",
