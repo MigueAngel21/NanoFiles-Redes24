@@ -14,6 +14,7 @@ import es.um.redes.nanoFiles.application.NanoFiles;
 import es.um.redes.nanoFiles.tcp.message.PeerMessage;
 import es.um.redes.nanoFiles.tcp.message.PeerMessageOps;
 import es.um.redes.nanoFiles.util.FileInfo;
+import javafx.scene.chart.PieChart.Data;
 
 public class NFServerComm {
 
@@ -35,8 +36,49 @@ public class NFServerComm {
 		 * devuelve la ruta al fichero a partir de su hash completo.
 		 */
 		//Foto de la clase
+		DataInputStream dis = null;
+		DataOutputStream dos = null;
+		try{
+			dos = new DataOutputStream(socket.getOutputStream());
+			dis = new DataInputStream(socket.getInputStream());
+			int numberToSend = PeerMessageOps.OPCODE_FILEDATA;
+			int numberToReceive = 0;
+			numberToReceive = dis.readInt();
+			System.out.println("Received: " + Integer.toString(numberToReceive));
+			if (numberToReceive == PeerMessageOps.OPCODE_DOWNLOAD) {
+				PeerMessage msgIn = PeerMessage.readMessageFromInputStream(dis);
+				String targetFileHashSubstr = msgIn.getFilehash();
+				/*
+				FileInfo fileInfo = new FileInfo();
+				File file = new File(NanoFiles.db.lookupFilePath(targetFileHashSubstr));
 
-
+				if (file.exists()) {
+					byte[] filedata = new byte[(int)file.length()];
+					DataInputStream disFile = new DataInputStream(new FileInputStream(file));
+					disFile.readFully(filedata);
+					disFile.close();
+					PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILEDATA, (int)filedata.length,filedata);
+					msgOut.writeMessageToOutputStream(dos);
+				} else {
+					PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILENOTFOUND);
+					msgOut.writeMessageToOutputStream(dos);
+				}
+				
+				byte[] filedata = new byte[(int)file.length()];
+				DataInputStream disFile = new DataInputStream(new FileInputStream(file));
+				disFile.readFully(filedata);
+				disFile.close();
+				PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILEDATA, (int)filedata.length,filedata);
+				msgOut.writeMessageToOutputStream(dos);
+				*/
+			}
+			dos.writeInt(numberToSend);
+			System.out.println("Sent: " + Integer.toString(numberToSend));
+			socket.close();
+		} catch (IOException e) {
+			System.err.println("* Error al crear los streams de entrada/salida");//Unable to start the server
+			e.printStackTrace();
+		}
 	}
 
 

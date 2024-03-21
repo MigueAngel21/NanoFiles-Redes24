@@ -94,28 +94,31 @@ public class NFConnector {
 		 * subcadena del mismo como parámetro.
 		 */
 		
-		int numbertosend = 1;
-		int numbrecieve = 0;
-		System.out.println("Sending download request..."+Integer.toString(numbertosend));
-		dos.writeInt(numbertosend);
+		int numberToSend = PeerMessageOps.OPCODE_DOWNLOAD;
+		int numberToReceive = 0;
+		System.out.println("Sending download request..."+Integer.toString(numberToSend));
+		dos.writeInt(numberToSend);
+		dis.readInt();
+		System.out.println("Received: " + Integer.toString(numberToReceive));
+
 		/*
 		dos.writeUTF(targetFileHashSubstr);
-		System.out.println("Request sent");
-		int numbertorecieve = dis.readInt();
-		System.out.println("Receiving file...");
-		FileOutputStream fos = new FileOutputStream(file);
-		byte[] buffer = new byte[1024];
-		int bytesRead;
-		while (numbrecieve < numbertorecieve) {
-			bytesRead = dis.read(buffer);
-			fos.write(buffer, 0, bytesRead);
-			numbrecieve++;
+		System.out.println("Sent: " + targetFileHashSubstr);
+		numberToReceive = dis.readInt();
+		System.out.println("Received: " + Integer.toString(numberToReceive));
+		if(numberToReceive == 2) {
+			int filelength = dis.readInt();
+			byte[] filedata = new byte[filelength];
+			dis.readFully(filedata);
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(filedata);
+			fos.close();
+			System.out.println("File received and saved.");
+			downloaded = true;
+		}else {
+			System.out.println("File not found.");
 		}
-		fos.close();
-		System.out.println("File received");
-		downloaded = true;
 		*/
-		
 		return downloaded;
 	}
 
