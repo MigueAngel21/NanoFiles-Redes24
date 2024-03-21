@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TCPClient",
+            "request": "launch",
+            "mainClass": "es.um.redes.boletinTCP.TCPClient",
+            "projectName": "NanoFiles-Redes24_b093df4e"
+        },
+        {
+            "type": "java",
+            "name": "TCPServer",
+            "request": "launch",
+            "mainClass": "es.um.redes.boletinTCP.TCPServer",
+            "projectName": "NanoFiles-Redes24_b093df4e"
+        },
+        {
+            "type": "java",
             "name": "PeerMessageTest",
             "request": "launch",
             "mainClass": "es.um.redes.nanoFiles.tcp.message.PeerMessageTest",

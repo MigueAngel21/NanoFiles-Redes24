@@ -19,11 +19,15 @@ public class NFServerSimple {
 		/*
 		 * TODO: Crear una direción de socket a partir del puerto especificado
 		 */
+		
 		/*
 		 * TODO: Crear un socket servidor y ligarlo a la dirección de socket anterior
 		 */
-
-
+		InetSocketAddress serverAdress = new InetSocketAddress(PORT);
+		
+		serverSocket = new ServerSocket();
+		serverSocket.bind(serverAdress);
+		serverSocket.setReuseAddress(true);
 
 	}
 
@@ -38,16 +42,46 @@ public class NFServerSimple {
 		/*
 		 * TODO: Comprobar que el socket servidor está creado y ligado
 		 */
+		if (serverSocket == null) {
+			System.err.println("* Error: Server socket is not created and bound");
+			return;
+		} else {
+				System.out.println("Server is listening on port " + serverSocket.getLocalSocketAddress() + ".");
+		}
 		/*
 		 * TODO: Usar el socket servidor para esperar conexiones de otros peers que
 		 * soliciten descargar ficheros
 		 */
+		Socket socket = null;
+		boolean stopserver = false;
+		while (!stopserver){
+			try {
+				socket = serverSocket.accept();
+				System.out.println("New client connected: " + socket.getInetAddress().toString() + ":" + socket.getPort());
+			} catch (SocketTimeoutException e) {
+				System.out.println("Server timeout. Waiting for new connections...");
+			} catch (IOException e) {
+				System.err.println("* Error: Problem accepting a connection. " + e.getMessage());
+				e.printStackTrace();
+				socket = null;
+			}
+
+			
+
+
+
+			if(socket != null) {
+				NFServerComm.serveFilesToClient(socket);
+			}	
+		}
+			
+
 		/*
 		 * TODO: Al establecerse la conexión con un peer, la comunicación con dicho
 		 * cliente se hace en el método NFServerComm.serveFilesToClient(socket), al cual
 		 * hay que pasarle el socket devuelto por accept
 		 */
-
+		
 
 
 		System.out.println("NFServerSimple stopped. Returning to the nanoFiles shell...");

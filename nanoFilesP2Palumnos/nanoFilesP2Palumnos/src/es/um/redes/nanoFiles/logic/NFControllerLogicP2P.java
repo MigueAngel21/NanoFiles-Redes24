@@ -5,9 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Random;
 
+import es.um.redes.nanoFiles.application.NanoFiles;
+import es.um.redes.nanoFiles.tcp.client.NFConnector;
+import es.um.redes.nanoFiles.tcp.server.NFServerSimple;
 
 
 
@@ -37,8 +41,16 @@ public class NFControllerLogicP2P {
 		 * este método. Si se produce una excepción de entrada/salida (error del que no
 		 * es posible recuperarse), se debe informar sin abortar el programa
 		 */
-
-
+		
+		NFServerSimple serverSimple = null;
+		try{
+			serverSimple = new NFServerSimple();
+		} catch (IOException e) {
+			System.err.println("* Error al crear el servidor de ficheros en primer plano");//Unable to start the server
+			e.printStackTrace();
+			return;
+		}
+		serverSimple.run();
 
 	}
 
@@ -97,8 +109,37 @@ public class NFControllerLogicP2P {
 		 * es posible recuperarse), se debe informar sin abortar el programa
 		 */
 
+		
+		NFConnector nfconnector = null;
+		try {
+			nfconnector = new NFConnector(fserverAddr);
+		}catch(UnknownHostException e) {
+			nfconnector = null;
+		} catch (IOException e) {
+			nfconnector = null;
+		}
+		if(nfconnector == null) {
+			System.err.println("* Error Unable to create the server connector");
+			return false;
+		}
+		
 
-
+		File file = new File(NanoFiles.sharedDirname + "/" + localFileName);
+		if (file.exists()) {
+				System.err.println("* File " + localFileName + " already exists. Download aborted.");
+				return false;
+		}
+		try {
+			result = nfconnector.downloadFile(targetFileHash, file);
+		} catch (IOException e) {
+			System.err.println("* Error downloading file " + localFileName);
+			result = false;
+		}
+		if (result) {
+			System.out.println("* File " + localFileName + " downloaded successfully.");
+		} else {
+			System.err.println("* Error downloading file " + localFileName);
+		}
 		return result;
 	}
 

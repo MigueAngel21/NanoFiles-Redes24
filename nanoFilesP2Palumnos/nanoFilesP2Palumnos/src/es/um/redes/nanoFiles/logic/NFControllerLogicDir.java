@@ -253,13 +253,15 @@ public class NFControllerLogicDir {
 			 * InetSocketAddress. Para convertir un string con la IP a un objeto InetAddress
 			 * se debe usar InetAddress.getByName()
 			 */
-
-
-
+			int idx = serverNicknameOrSocketAddr.indexOf(":");	
+			String ip = serverNicknameOrSocketAddr.substring(0, idx);
+			String port = serverNicknameOrSocketAddr.substring(idx+1).trim();
+			fserverAddr = new InetSocketAddress(ip, Integer.parseInt(port));
+			
 		} else {
 			/*
 			 * TODO: Si es un nickname, preguntar al directorio la IP:puerto asociada a
-			 * dicho peer servidor.
+			 * dicho peer servidor. Para la mejora
 			 */
 			fserverAddr = lookupServerAddrByUsername(serverNicknameOrSocketAddr);
 		}

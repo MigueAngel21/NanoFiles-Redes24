@@ -19,6 +19,8 @@ public class NFConnector {
 	private Socket socket;
 	private InetSocketAddress serverAddr;
 
+	protected DataOutputStream dos;
+	protected DataInputStream dis;
 
 
 
@@ -29,12 +31,15 @@ public class NFConnector {
 		 * creación exitosa del socket significa que la conexión TCP ha sido
 		 * establecida.
 		 */
+		socket = new Socket(serverAddr.getAddress(), serverAddr.getPort());	
+		System.out.println("Conexión establecida con el servidor: " + serverAddr.getAddress().toString() + ":" + serverAddr.getPort());
 		/*
 		 * TODO Se crean los DataInputStream/DataOutputStream a partir de los streams de
 		 * entrada/salida del socket creado. Se usarán para enviar (dos) y recibir (dis)
 		 * datos del servidor.
 		 */
-
+		dos=new DataOutputStream(socket.getOutputStream());
+		dis=new DataInputStream(socket.getInputStream());
 
 
 	}
@@ -59,6 +64,8 @@ public class NFConnector {
 		 * al servidor a través del "dos" del socket mediante el método
 		 * writeMessageToOutputStream.
 		 */
+		//PeerMessage message = new PeerMessage(PeerMessageOps.OPCODE_DOWNLOAD, targetFileHashSubstr.length(), targetFileHashSubstr);
+		//message.writeMessageToOutputStream(dos);
 		/*
 		 * TODO: Recibir mensajes del servidor a través del "dis" del socket usando
 		 * PeerMessage.readMessageFromInputStream, y actuar en función del tipo de
@@ -86,10 +93,29 @@ public class NFConnector {
 		 * completo del fichero descargado, ya que quizás únicamente obtuvimos una
 		 * subcadena del mismo como parámetro.
 		 */
-
-
-
-
+		
+		int numbertosend = 1;
+		int numbrecieve = 0;
+		System.out.println("Sending download request..."+Integer.toString(numbertosend));
+		dos.writeInt(numbertosend);
+		/*
+		dos.writeUTF(targetFileHashSubstr);
+		System.out.println("Request sent");
+		int numbertorecieve = dis.readInt();
+		System.out.println("Receiving file...");
+		FileOutputStream fos = new FileOutputStream(file);
+		byte[] buffer = new byte[1024];
+		int bytesRead;
+		while (numbrecieve < numbertorecieve) {
+			bytesRead = dis.read(buffer);
+			fos.write(buffer, 0, bytesRead);
+			numbrecieve++;
+		}
+		fos.close();
+		System.out.println("File received");
+		downloaded = true;
+		*/
+		
 		return downloaded;
 	}
 
