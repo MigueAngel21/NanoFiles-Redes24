@@ -39,7 +39,7 @@ public class NFServerSimple {
 
 		}
 		serverSocket.setReuseAddress(true);
-
+		serverSocket.setSoTimeout(SERVERSOCKET_ACCEPT_TIMEOUT_MILISECS);
 	}
 
 	/**
@@ -70,7 +70,20 @@ public class NFServerSimple {
 				socket = serverSocket.accept();
 				System.out.println("New client connected: " + socket.getInetAddress().toString() + ":" + socket.getPort());
 			} catch (SocketTimeoutException e) {
-				System.out.println("Server timeout. Waiting for new connections...");
+				//System.out.println("Server timeout. Waiting for new connections...");
+				//haz que pueda leer el comando de parada fgstop
+				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				try {
+					if (br.ready()) {
+						String command = br.readLine();
+						if (command.equals(STOP_SERVER_COMMAND)) {
+							stopserver = true;
+						}
+					}
+				} catch (IOException e1) {
+					System.err.println("* Error: Problem reading the stop command. " + e1.getMessage());
+					e1.printStackTrace();
+				}
 			} catch (IOException e) {
 				System.err.println("* Error: Problem accepting a connection. " + e.getMessage());
 				e.printStackTrace();
