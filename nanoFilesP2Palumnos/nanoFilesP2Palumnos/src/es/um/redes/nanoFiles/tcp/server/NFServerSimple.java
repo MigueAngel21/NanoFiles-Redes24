@@ -3,10 +3,12 @@ package es.um.redes.nanoFiles.tcp.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Random;
 
 public class NFServerSimple {
 
@@ -26,7 +28,16 @@ public class NFServerSimple {
 		InetSocketAddress serverAdress = new InetSocketAddress(PORT);
 		
 		serverSocket = new ServerSocket();
-		serverSocket.bind(serverAdress);
+		try {
+			serverSocket.bind(serverAdress);
+		} catch (BindException e) {
+			System.err.println("* Error: Port " + PORT + " is already in use.");
+			Random random = new Random();
+			int newPort = random.nextInt(55535)+10000;
+			System.out.println("Trying to bind to port " + newPort + "...");
+			serverSocket.bind(new InetSocketAddress(newPort));
+
+		}
 		serverSocket.setReuseAddress(true);
 
 	}

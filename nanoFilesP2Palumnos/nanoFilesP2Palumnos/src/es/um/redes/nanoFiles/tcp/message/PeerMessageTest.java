@@ -42,7 +42,7 @@ public class PeerMessageTest {
 			System.err.println("Opcode does not match!");
 		}else{
 			switch (msgIn.getOpcode()) {
-				case PeerMessageOps.OPCODE_DOWNLOAD:
+				case PeerMessageOps.OPCODE_DOWNLOADFROM:
 					int hashlen = (int) msgIn.getHashlength();
 					String hash = msgIn.getFilehash();
 					System.out.println("Hash Length: " + hashlen + " Hash: " + hash);

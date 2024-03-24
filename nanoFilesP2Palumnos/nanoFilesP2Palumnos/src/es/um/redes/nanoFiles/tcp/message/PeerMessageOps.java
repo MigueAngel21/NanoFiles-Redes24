@@ -6,7 +6,7 @@ import java.util.TreeMap;
 public class PeerMessageOps {
 
 	public static final byte OPCODE_INVALID_CODE = 0;
-	public static final byte OPCODE_DOWNLOAD = 1;
+	public static final byte OPCODE_DOWNLOADFROM = 1;
 	public static final byte OPCODE_FILEDATA = 2;
 	public static final byte OPCODE_FILENOTFOUND = 3;
 
@@ -18,7 +18,7 @@ public class PeerMessageOps {
 	 */
 	private static final Byte[] _valid_opcodes = {
 			OPCODE_INVALID_CODE,
-			OPCODE_DOWNLOAD,
+			OPCODE_DOWNLOADFROM,
 			OPCODE_FILEDATA,
 			OPCODE_FILENOTFOUND,
 

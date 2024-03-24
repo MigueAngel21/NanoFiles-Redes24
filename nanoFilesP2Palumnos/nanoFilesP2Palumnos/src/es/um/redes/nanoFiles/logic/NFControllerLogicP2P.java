@@ -110,6 +110,12 @@ public class NFControllerLogicP2P {
 		 */
 
 		
+		 File file = new File(NanoFiles.sharedDirname + "/" + localFileName);
+		 if (file.exists()) {
+				 System.err.println("* File " + localFileName + " already exists. Download aborted.");
+				 return false;
+		 }
+
 		NFConnector nfconnector = null;
 		try {
 			nfconnector = new NFConnector(fserverAddr);
@@ -124,11 +130,7 @@ public class NFControllerLogicP2P {
 		}
 		
 
-		File file = new File(NanoFiles.sharedDirname + "/" + localFileName);
-		if (file.exists()) {
-				System.err.println("* File " + localFileName + " already exists. Download aborted.");
-				return false;
-		}
+		
 		try {
 			result = nfconnector.downloadFile(targetFileHash, file);
 		} catch (IOException e) {

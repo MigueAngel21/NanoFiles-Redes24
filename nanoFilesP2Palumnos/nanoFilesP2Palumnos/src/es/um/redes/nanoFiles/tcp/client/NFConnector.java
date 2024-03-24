@@ -93,13 +93,38 @@ public class NFConnector {
 		 * completo del fichero descargado, ya que quizás únicamente obtuvimos una
 		 * subcadena del mismo como parámetro.
 		 */
-		
+		/*
 		int numberToSend = PeerMessageOps.OPCODE_DOWNLOAD;
 		int numberToReceive = 0;
 		System.out.println("Sending download request..."+Integer.toString(numberToSend));
 		dos.writeInt(numberToSend);
 		dis.readInt();
 		System.out.println("Received: " + Integer.toString(numberToReceive));
+		*/
+
+		PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_DOWNLOADFROM, (byte)targetFileHashSubstr.length(), targetFileHashSubstr);
+		msgOut.writeMessageToOutputStream(dos);
+		String OGHash = dis.readUTF();
+		PeerMessage msgIn = PeerMessage.readMessageFromInputStream(dis);
+		switch (msgIn.getOpcode()) {
+			case PeerMessageOps.OPCODE_FILEDATA:
+				byte[] filedata = msgIn.getFiledata();
+				FileOutputStream fos = new FileOutputStream(file);
+				fos.write(filedata);
+				fos.close();
+				System.out.println("File received and saved.");
+				String fich = file.getAbsolutePath();
+				String newHash = FileDigest.computeFileChecksumString(fich);
+				if(OGHash.equals(newHash)){
+					downloaded = true;
+				}
+				break;
+			case PeerMessageOps.OPCODE_FILENOTFOUND:
+				System.out.println("File not found.");
+				break;
+			default:
+				break;
+		}
 
 		/*
 		dos.writeUTF(targetFileHashSubstr);

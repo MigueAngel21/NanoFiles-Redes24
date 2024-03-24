@@ -120,7 +120,7 @@ public class PeerMessage {
 		case PeerMessageOps.OPCODE_FILENOTFOUND:
 			message = new PeerMessage(opcode);
 			break;
-		case PeerMessageOps.OPCODE_DOWNLOAD:
+		case PeerMessageOps.OPCODE_DOWNLOADFROM:
 			byte hashlength = dis.readByte();
 			byte[] hash = new byte[hashlength];
 			dis.readFully(hash);
@@ -154,7 +154,7 @@ public class PeerMessage {
 		switch (opcode) {
 		case PeerMessageOps.OPCODE_FILENOTFOUND:
 			break;
-		case PeerMessageOps.OPCODE_DOWNLOAD:
+		case PeerMessageOps.OPCODE_DOWNLOADFROM:
 			assert ((filehash.length()==hashlength) && (hashlength > 0));
 			dos.writeByte(hashlength);
 			dos.write(filehash.getBytes());

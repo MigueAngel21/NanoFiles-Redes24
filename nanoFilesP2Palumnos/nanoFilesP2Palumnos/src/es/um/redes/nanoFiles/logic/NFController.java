@@ -248,7 +248,18 @@ public class NFController {
 				commandAllowed = false;
 				System.err.println("* You cannot list users because you are not logged in the directory");
 			}
-
+		case NFCommands.COM_FGSERVE:
+			if (currentState != LOGGED_IN) {
+				commandAllowed = false;
+				System.err.println("* You cannot foreground serve files because you are not logged in the directory");
+			}
+			break;
+		case NFCommands.COM_DOWNLOADFROM:
+			if (currentState != LOGGED_IN) {
+				commandAllowed = false;
+				System.err.println("* You cannot download from a server because you are not logged in the directory");
+			}
+			break;
 		default:
 			// System.err.println("ERROR: undefined behaviour for " + currentCommand + "
 			// command!");
@@ -277,7 +288,12 @@ public class NFController {
 		case NFCommands.COM_USERLIST: {
 			break;	//no cambia el estado
 		}
-
+		case NFCommands.COM_FGSERVE: {
+			break;	//no cambia el estado
+		}
+		case NFCommands.COM_DOWNLOADFROM: {
+			break;	//no cambia el estado
+		}
 		default:
 		}
 
