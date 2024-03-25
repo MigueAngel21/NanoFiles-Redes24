@@ -38,43 +38,42 @@ public class NFServerComm {
 		//Foto de la clase
 		DataInputStream dis = null;
 		DataOutputStream dos = null;
-		boolean stopserver = false;
 		
-			try{
-				dos = new DataOutputStream(socket.getOutputStream());
-				dis = new DataInputStream(socket.getInputStream());
-				PeerMessage msgIn = PeerMessage.readMessageFromInputStream(dis);
-				switch (msgIn.getOpcode()) {
-					case PeerMessageOps.OPCODE_DOWNLOADFROM:										//Si el mensaje es de descarga
-						String hash = msgIn.getFilehash();											//Obtenemos el hash del fichero
-						FileInfo[] file = FileInfo.loadFilesFromFolder(NanoFiles.sharedDirname);	//Cargamos los ficheros compartidos
-						FileInfo[] infoFich = FileInfo.lookupHashSubstring(file, hash);				//Buscamos el fichero por el hash
-						if (infoFich.length == 0){
-							String vacio = "";
-							dos.writeUTF(vacio);														//Si no se encuentra el fichero
-							PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILENOTFOUND);	
-							msgOut.writeMessageToOutputStream(dos);										//Enviamos un mensaje de error
-						} else {
-							String targetHash = infoFich[0].fileHash;									//Si se encuentra el fichero
-							dos.writeUTF(targetHash);
-							String path = NanoFiles.db.lookupFilePath(targetHash);						//Obtenemos la ruta del fichero
-							File fichero = new File(path);
-							int length = (int) fichero.length();
-							byte[] filedata = new byte[length];
-							DataInputStream disFich = new DataInputStream(new FileInputStream(fichero)); //Leemos el fichero
-							disFich.readFully(filedata);
-							disFich.close();															//Cerramos el fichero
-							PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILEDATA, (int)filedata.length, filedata);
-							msgOut.writeMessageToOutputStream(dos);										//Enviamos el fichero
-						}
-						break;
-					default:
-						break;
-				}
+		
+		try{
+			dos = new DataOutputStream(socket.getOutputStream());
+			dis = new DataInputStream(socket.getInputStream());
+			PeerMessage msgIn = PeerMessage.readMessageFromInputStream(dis);
+			switch (msgIn.getOpcode()) {
+				case PeerMessageOps.OPCODE_DOWNLOADFROM:										//Si el mensaje es de descarga
+					String hash = msgIn.getFilehash();											//Obtenemos el hash del fichero
+					FileInfo[] file = FileInfo.loadFilesFromFolder(NanoFiles.sharedDirname);	//Cargamos los ficheros compartidos
+					FileInfo[] infoFich = FileInfo.lookupHashSubstring(file, hash);				//Buscamos el fichero por el hash
+					if (infoFich.length == 0){
+						String vacio = "";
+						dos.writeUTF(vacio);														//Si no se encuentra el fichero
+						PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILENOTFOUND);	
+						msgOut.writeMessageToOutputStream(dos);										//Enviamos un mensaje de error
+					} else {
+						String targetHash = infoFich[0].fileHash;									//Si se encuentra el fichero
+						dos.writeUTF(targetHash);
+						String path = NanoFiles.db.lookupFilePath(targetHash);						//Obtenemos la ruta del fichero
+						File fichero = new File(path);
+						int length = (int) fichero.length();
+						byte[] filedata = new byte[length];
+						DataInputStream disFich = new DataInputStream(new FileInputStream(fichero)); //Leemos el fichero
+						disFich.readFully(filedata);
+						disFich.close();															//Cerramos el fichero
+						PeerMessage msgOut = new PeerMessage(PeerMessageOps.OPCODE_FILEDATA, (int)filedata.length, filedata);
+						msgOut.writeMessageToOutputStream(dos);										//Enviamos el fichero
+					}
+					break;
+				default:
+					break;
+			}
 						
 			} catch (IOException e) {
 				e.printStackTrace();
-				stopserver = true;
 			}
 		
 		try {

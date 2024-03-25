@@ -96,6 +96,7 @@ public class NFServerSimple {
 
 			if(socket != null) {
 				NFServerComm.serveFilesToClient(socket);
+				socket = null;
 			}	
 		}
 			
