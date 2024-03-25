@@ -35,7 +35,7 @@ public class NFServerComm {
 		 * subcadena del hash. El método NanoFiles.db.lookupFilePath(targethash)
 		 * devuelve la ruta al fichero a partir de su hash completo.
 		 */
-		//Foto de la clase
+
 		DataInputStream dis = null;
 		DataOutputStream dos = null;
 		

@@ -71,12 +71,11 @@ public class NFServerSimple {
 				System.out.println("New client connected: " + socket.getInetAddress().toString() + ":" + socket.getPort());
 			} catch (SocketTimeoutException e) {
 				//System.out.println("Server timeout. Waiting for new connections...");
-				//haz que pueda leer el comando de parada fgstop
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				try {
 					if (br.ready()) {
 						String command = br.readLine();
-						if (command.equals(STOP_SERVER_COMMAND)) {
+						if (command.equals(STOP_SERVER_COMMAND)) {		//Si se introduce el comando de parada
 							stopserver = true;
 						}
 					}
@@ -97,10 +96,14 @@ public class NFServerSimple {
 			if(socket != null) {
 				NFServerComm.serveFilesToClient(socket);
 				socket = null;
-			}	
+			}
 		}
 			
-
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		/*
 		 * TODO: Al establecerse la conexión con un peer, la comunicación con dicho
 		 * cliente se hace en el método NFServerComm.serveFilesToClient(socket), al cual
