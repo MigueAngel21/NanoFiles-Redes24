@@ -121,17 +121,13 @@ public class NFControllerLogicDir {
 		boolean result = false;
 		try {
 			String[] lista = directoryConnector.getUserList();
+			String[] estados = directoryConnector.getUserStatus();
 			if (lista != null) {
 				result = true;
 				System.out.println("Lista de usuarios registrados: ");
 				for (int i = 0; i < lista.length; i++) {
-					if (i == lista.length - 1) {
-						System.out.print(lista[i]);
-					} else {
-						System.out.print(lista[i]+", ");
-					}
+					System.out.println("Usuario: "+lista[i] + " - "+"SirveFicheros: "+estados[i]);
 				}
-				System.out.println();
 			} else {
 				System.err.println("Error: the user list is empty");
 			}
@@ -177,7 +173,17 @@ public class NFControllerLogicDir {
 		 * éxito/fracaso de la operación.
 		 */
 		boolean result = false;
-
+		try {
+			boolean exito = directoryConnector.registerServerPort(serverPort);
+			if (exito){
+				System.out.println("Registro de servidor de ficheros con éxito");
+				result = true;
+			} else {
+				System.err.println("Error de registro de servidor");
+			}
+		} catch (Exception e) {
+			System.out.println("Error de registro de servidor");
+		}
 
 
 		return result;
@@ -331,7 +337,17 @@ public class NFControllerLogicDir {
 		 * para identificarse.
 		 */
 		boolean result = false;
-
+		try {
+			boolean exito = directoryConnector.unregisterServerPort();
+			if (exito){
+				System.out.println("Cierre de servidor de ficheros con éxito");
+				result = true;
+			} else {
+				System.err.println("Error de desregistro de servidor");
+			}
+		} catch (Exception e) {
+			System.out.println("Error de desregistro de servidor");
+		}
 
 
 		return result;

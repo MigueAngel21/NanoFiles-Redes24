@@ -12,6 +12,7 @@ import java.util.Random;
 import es.um.redes.nanoFiles.application.NanoFiles;
 import es.um.redes.nanoFiles.tcp.client.NFConnector;
 import es.um.redes.nanoFiles.tcp.server.NFServerSimple;
+import es.um.redes.nanoFiles.tcp.server.*;
 
 
 
@@ -21,7 +22,7 @@ public class NFControllerLogicP2P {
 	 * TODO: Para bgserve, se necesita un atributo NFServer que actuará como
 	 * servidor de ficheros en segundo plano de este peer
 	 */
-
+	private NFServer server = null;
 
 
 
@@ -70,15 +71,32 @@ public class NFControllerLogicP2P {
 		 * comprobar que el servidor está escuchando en un puerto válido (>0) e imprimir
 		 * mensaje informando sobre el puerto, y devolver verdadero.
 		 */
+		if (server != null) {
+			System.err.println("* Error: Server is already running");
+			return false;
+		}
+		try {
+			server = new NFServer();
+		} catch (IOException e) {
+			System.err.println("* Error: Unable to create the server");
+			e.printStackTrace();
+			return false;
+		}
 		/*
 		 * TODO: Las excepciones que puedan lanzarse deben ser capturadas y tratadas en
 		 * este método. Si se produce una excepción de entrada/salida (error del que no
 		 * es posible recuperarse), se debe informar sin abortar el programa
 		 */
+		server.start();
+		int port = server.getPort();
+		if (port > 0) {
+			System.out.println("* Server is listening on port " + port);
+			return true;
+		} else {
+			System.err.println("* Error: Server is not listening on any port");
+			return false;
+		}
 
-
-
-		return false;
 	}
 
 	/**
@@ -192,9 +210,12 @@ public class NFControllerLogicP2P {
 		 * TODO: Devolver el puerto de escucha de nuestro servidor de ficheros en
 		 * segundo plano
 		 */
-
-
-
+		if (server != null) {
+			port = server.getPort();
+		} else {
+			System.err.println("* Error: Server is not running");
+		}
+		
 		return port;
 	}
 
@@ -206,8 +227,12 @@ public class NFControllerLogicP2P {
 		/*
 		 * TODO: Enviar señal para detener nuestro servidor de ficheros en segundo plano
 		 */
-
-
+		if (server != null) {
+			server.stop();
+			server = null;
+		} else {
+			System.err.println("* Error: Server is not running");
+		}
 
 	}
 

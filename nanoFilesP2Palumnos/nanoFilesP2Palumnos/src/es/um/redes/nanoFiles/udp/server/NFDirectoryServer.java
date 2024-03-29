@@ -41,7 +41,7 @@ public class NFDirectoryServer {
 	 * funcionalidad del sistema nanoFilesP2P: ficheros publicados, servidores
 	 * registrados, etc.
 	 */
-
+	private HashMap<String, InetSocketAddress> servers;
 
 
 
@@ -74,7 +74,7 @@ public class NFDirectoryServer {
 		 */
 		this.nicks=new HashMap<String,Integer>();
 		this.sessionKeys=new HashMap<Integer,String>();
-
+		this.servers=new HashMap<String,InetSocketAddress>();
 
 
 		if (NanoFiles.testMode) {
@@ -272,6 +272,63 @@ public class NFDirectoryServer {
 			break;
 		}
 		
+		case DirMessageOps.OPERATION_USERSTATUS: {
+			int clave = Integer.parseInt(msg.getSessionKey());
+			if (!(sessionKeys.containsKey(clave))) {
+				response = new DirMessage(DirMessageOps.OPERATION_USERSTATUS_FAIL);
+				System.err.println("Userstatus failed: session key not found");
+			} else {
+				System.out.println("Recieve userstatus request from " + clientAddr);
+				System.out.println("Client " + clientAddr + "successfully obteined userstatus");
+				response = new DirMessage(DirMessageOps.OPERATION_USERSTATUS_OK);
+				String[] userlist = new String[nicks.size()];
+				String[] userstatus = new String[nicks.size()];
+				for (int i = 0; i < nicks.size(); i++) {
+					userlist[i] = (String) nicks.keySet().toArray()[i];
+				}
+				for (int i = 0; i < nicks.size(); i++){
+					if (servers.containsKey(userlist[i])) {
+						userstatus[i] = "true";
+					} else {
+						userstatus[i] = "false";
+					}
+				}
+				response.setUserStatus(userstatus);
+				System.out.println("Sent userstatus reponse to " + clientAddr);
+			}
+			break;
+		}
+
+		case DirMessageOps.OPERATION_REGISTER_FILESERVER: {
+			int clave = Integer.parseInt(msg.getSessionKey());
+			if (!(sessionKeys.containsKey(clave))) {
+				response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_FAIL);
+				System.err.println("Register fileserver failed: session key not found");
+			} else {
+				String username = sessionKeys.get(clave);
+				String port = msg.getPort();
+				int portInt = Integer.parseInt(port);
+				InetSocketAddress bgServerAddress = new InetSocketAddress(clientAddr.getAddress(), portInt);
+				servers.put(username, bgServerAddress);
+				response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK);
+				System.out.println("Fileserver " + username + " registered");
+			}
+			break;
+		}
+
+		case DirMessageOps.OPERATION_UNREGISTER_FILESERVER: {
+			int clave = Integer.parseInt(msg.getSessionKey());
+			if (!(sessionKeys.containsKey(clave))) {
+				response = new DirMessage(DirMessageOps.OPERATION_UNREGISTER_FILESERVER_FAIL);
+				System.err.println("Unregister fileserver failed: session key not found");
+			} else {
+				String username = sessionKeys.get(clave);
+				servers.remove(username);
+				response = new DirMessage(DirMessageOps.OPERATION_UNREGISTER_FILESERVER_OK);
+				System.out.println("Fileserver " + username + " unregistered");
+			}
+			break;
+		}
 		default:
 			System.out.println("Unexpected message operation: \"" + operation + "\"");
 		}

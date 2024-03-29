@@ -260,6 +260,22 @@ public class NFController {
 				System.err.println("* You cannot download from a server because you are not logged in the directory");
 			}
 			break;
+
+		case NFCommands.COM_BGSERVE:
+			if (currentState != LOGGED_IN) {
+				commandAllowed = false;
+				System.err.println("* You cannot background serve files because you are not logged in the directory");
+			}
+			break;
+
+		case NFCommands.COM_STOP_SERVER:
+			if (currentState != LOGGED_IN) {
+				commandAllowed = false;
+				System.err.println("* You cannot stop the server because you are not logged in the directory");
+			}
+			break;
+
+		
 		default:
 			// System.err.println("ERROR: undefined behaviour for " + currentCommand + "
 			// command!");
@@ -292,6 +308,12 @@ public class NFController {
 			break;	//no cambia el estado
 		}
 		case NFCommands.COM_DOWNLOADFROM: {
+			break;	//no cambia el estado
+		}
+		case NFCommands.COM_BGSERVE: {
+			break;	//no cambia el estado
+		}
+		case NFCommands.COM_STOP_SERVER: {
 			break;	//no cambia el estado
 		}
 		default:

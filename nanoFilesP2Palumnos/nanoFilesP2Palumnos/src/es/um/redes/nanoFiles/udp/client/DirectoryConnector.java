@@ -284,6 +284,31 @@ public class DirectoryConnector {
 	}
 
 	/**
+	 * Método para obtener el estado de los usuarios registrados en el directorio.
+	 * Sirve de soporte para la mejora del userlist de base
+	 * 
+	 * @return La lista de booleanos de si los usuarios están sirviendo o no
+	 */
+	public String[] getUserStatus() {
+		String[] isServing = null;
+		DirMessage msguserStatus = new DirMessage(DirMessageOps.OPERATION_USERSTATUS);
+		msguserStatus.setSessionKey(Integer.toString(getSessionKey()));
+		String strToSend = msguserStatus.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		receiveData = sendAndReceiveDatagrams(dataToSend);
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_USERSTATUS_OK)) {
+			isServing = response.getUserStatus();
+			System.out.println("Lista de estados de usuarios obtenida");
+		} else {
+			System.err.println("Error de obtencion de lista de estados de usuarios: "+operation);
+		}
+
+		return isServing;
+	}
+	/**
 	 * Método para "cerrar sesión" en el directorio
 	 * 
 	 * @return Verdadero si el directorio eliminó a este usuario exitosamente
@@ -323,6 +348,51 @@ public class DirectoryConnector {
 	public boolean registerServerPort(int serverPort) {
 		// TODO: Ver TODOs en logIntoDirectory y seguir esquema similar
 		boolean success = false;
+		assert (sessionKey != INVALID_SESSION_KEY);
+		DirMessage msgregister = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER);
+		msgregister.setSessionKey(Integer.toString(getSessionKey()));
+		msgregister.setPort(Integer.toString(serverPort));
+		String strToSend = msgregister.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		receiveData = sendAndReceiveDatagrams(dataToSend);
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK)) {
+			success = true;
+			System.out.println("Registro de servidor de ficheros correcto");
+		} else {
+			System.err.println("Error de registro de servidor: "+ operation);
+		}
+		
+		return success;
+	}
+
+
+	/**
+	 * Método para dar de baja como servidor de ficheros en el puerto indicado a
+	 * este peer.
+	 * 
+	 * @return Verdadero si el directorio acepta que este peer se de de baja en
+	 *         el servidor.
+	 */
+	public boolean unregisterServerPort() {
+		boolean success = false;
+		assert (sessionKey != INVALID_SESSION_KEY);
+		DirMessage msgunregister = new DirMessage(DirMessageOps.OPERATION_UNREGISTER_FILESERVER);
+		msgunregister.setSessionKey(Integer.toString(getSessionKey()));
+		String strToSend = msgunregister.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		receiveData = sendAndReceiveDatagrams(dataToSend);
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_UNREGISTER_FILESERVER_OK)) {
+			success = true;
+			System.out.println("Cierre de servidor de ficheros correcto");
+		} else {
+			System.err.println("Error de cierre de servidor: "+operation);
+		}
 
 
 

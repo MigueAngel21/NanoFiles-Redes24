@@ -33,7 +33,8 @@ public class DirMessage {
 	private static final String FIELDNAME_NICKNAME = "nickname";
 	private static final String FIELDNAME_SESSIONKEY = "sessionkey";
 	private static final String FIELDNAME_USERLIST = "users";
-
+	private static final String FIELDNAME_PORT = "port";
+	private static final String FIELDNAME_USERSTATUS = "userstatus";
 	/**
 	 * Tipo del mensaje, de entre los tipos definidos en PeerMessageOps.
 	 */
@@ -45,8 +46,8 @@ public class DirMessage {
 	private String nickname;
 	private String sessionkey; //parsear a int cuando haya que meter la clave al mapa
 	private String[] users;
-
-
+	private String port;
+	private String[] userStatus;
 	public DirMessage(String op) {
 		operation = op;
 	}
@@ -89,6 +90,21 @@ public class DirMessage {
 		users = list;
 	}
 
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String[] getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String[] userStatus) {
+		this.userStatus = userStatus;
+	}
 
 	/**
 	 * Método que convierte un mensaje codificado como una cadena de caracteres, a
@@ -147,6 +163,23 @@ public class DirMessage {
 				break;
 			}
 
+			case FIELDNAME_USERSTATUS:{
+				assert (m != null);
+				String[] isServing = value.split(",");
+				String[] userStatus = new String[isServing.length];
+				for (int i = 0; i < isServing.length; i++) {
+					userStatus[i] = isServing[i];
+				}
+				m.setUserStatus(userStatus);
+				break;
+			}
+
+			case FIELDNAME_PORT:{
+				assert (m != null);
+				m.setPort(value);
+				break;
+			}
+			
 			case END_LINE_STR: // Ignoramos las líneas en blanco
 				break;
 			default:
@@ -206,12 +239,51 @@ public class DirMessage {
 					} else {
 						usuarios += users[i] + ",";
 					}
-				}	
-				
+				}
 				sb.append(FIELDNAME_USERLIST + DELIMITER + usuarios + END_LINE);
 				break;
+			
 			case DirMessageOps.OPERATION_USERLIST_FAIL:
 				break;
+
+			case DirMessageOps.OPERATION_USERSTATUS:
+				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
+				break;
+
+			case DirMessageOps.OPERATION_USERSTATUS_OK:
+				String isServing = "";
+				for (int i = 0; i < userStatus.length; i++) {
+					if (i == userStatus.length - 1) {
+						isServing += userStatus[i];
+					} else {
+						isServing += userStatus[i] + ",";
+					}
+				}
+				sb.append(FIELDNAME_USERSTATUS + DELIMITER + isServing + END_LINE);
+				break;
+
+			case DirMessageOps.OPERATION_USERSTATUS_FAIL:
+				break;
+			
+			case DirMessageOps.OPERATION_REGISTER_FILESERVER:
+				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
+				sb.append(FIELDNAME_PORT + DELIMITER + port + END_LINE);
+				break;
+			
+			case DirMessageOps.OPERATION_REGISTER_FILESERVER_OK:	//no hay nada que hacer
+				break;
+			
+			case DirMessageOps.OPERATION_REGISTER_FILESERVER_FAIL:	//no hay nada que hacer
+				break;
+			case DirMessageOps.OPERATION_UNREGISTER_FILESERVER:
+				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
+				break;
+			case DirMessageOps.OPERATION_UNREGISTER_FILESERVER_OK:	//no hay nada que hacer
+				break;
+
+			case DirMessageOps.OPERATION_UNREGISTER_FILESERVER_FAIL:	//no hay nada que hacer
+				break;
+
 			default:	//los break salen por el default
 				break;
 			
