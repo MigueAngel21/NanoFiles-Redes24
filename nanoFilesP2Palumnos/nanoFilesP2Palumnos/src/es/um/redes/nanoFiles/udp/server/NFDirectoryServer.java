@@ -321,6 +321,9 @@ public class NFDirectoryServer {
 			if (!(sessionKeys.containsKey(clave))) {
 				response = new DirMessage(DirMessageOps.OPERATION_UNREGISTER_FILESERVER_FAIL);
 				System.err.println("Unregister fileserver failed: session key not found");
+			} else if (!(servers.containsKey(sessionKeys.get(clave))) ) {
+				response = new DirMessage(DirMessageOps.OPERATION_UNREGISTER_FILESERVER_FAIL);
+				System.err.println("Unregister fileserver failed: fileserver not found");
 			} else {
 				String username = sessionKeys.get(clave);
 				servers.remove(username);

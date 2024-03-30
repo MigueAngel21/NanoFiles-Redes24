@@ -343,10 +343,10 @@ public class NFControllerLogicDir {
 				System.out.println("Cierre de servidor de ficheros con éxito");
 				result = true;
 			} else {
-				System.err.println("Error de desregistro de servidor");
+				System.err.println("Error de cierre de servidor");
 			}
 		} catch (Exception e) {
-			System.out.println("Error de desregistro de servidor");
+			System.out.println("Error de cierre de servidor");
 		}
 
 
