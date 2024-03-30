@@ -248,6 +248,7 @@ public class NFController {
 				commandAllowed = false;
 				System.err.println("* You cannot list users because you are not logged in the directory");
 			}
+			break;
 		case NFCommands.COM_FGSERVE:
 			if (currentState != LOGGED_IN) {
 				commandAllowed = false;
