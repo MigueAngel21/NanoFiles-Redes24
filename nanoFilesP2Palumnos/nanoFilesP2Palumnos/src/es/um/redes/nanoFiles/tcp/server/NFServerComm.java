@@ -14,7 +14,7 @@ import es.um.redes.nanoFiles.application.NanoFiles;
 import es.um.redes.nanoFiles.tcp.message.PeerMessage;
 import es.um.redes.nanoFiles.tcp.message.PeerMessageOps;
 import es.um.redes.nanoFiles.util.FileInfo;
-import javafx.scene.chart.PieChart.Data;
+
 
 public class NFServerComm {
 
