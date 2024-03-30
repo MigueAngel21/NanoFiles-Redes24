@@ -227,7 +227,11 @@ public class NFControllerLogicDir {
 		 * IP:puerto válidos), se debe devolver null.
 		 */
 		InetSocketAddress serverAddr = null;
-
+		try {
+			serverAddr = directoryConnector.lookupServerAddrByUsername(nickname);
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 
 
 		return serverAddr;

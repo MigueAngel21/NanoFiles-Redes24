@@ -35,6 +35,7 @@ public class DirMessage {
 	private static final String FIELDNAME_USERLIST = "users";
 	private static final String FIELDNAME_PORT = "port";
 	private static final String FIELDNAME_USERSTATUS = "userstatus";
+	private static final String FIELDNAME_SERVER = "server";
 	/**
 	 * Tipo del mensaje, de entre los tipos definidos en PeerMessageOps.
 	 */
@@ -48,6 +49,7 @@ public class DirMessage {
 	private String[] users;
 	private String port;
 	private String[] userStatus;
+	private String server;
 	public DirMessage(String op) {
 		operation = op;
 	}
@@ -104,6 +106,14 @@ public class DirMessage {
 
 	public void setUserStatus(String[] userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public String getServer() {
+		return server;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
 	}
 
 	/**
@@ -177,6 +187,12 @@ public class DirMessage {
 			case FIELDNAME_PORT:{
 				assert (m != null);
 				m.setPort(value);
+				break;
+			}
+
+			case FIELDNAME_SERVER:{
+				assert (m != null);
+				m.setServer(value);
 				break;
 			}
 			
@@ -284,6 +300,18 @@ public class DirMessage {
 			case DirMessageOps.OPERATION_UNREGISTER_FILESERVER_FAIL:	//no hay nada que hacer
 				break;
 
+			case DirMessageOps.OPERATION_LOOKUPSERVER:
+				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
+				sb.append(FIELDNAME_NICKNAME + DELIMITER + nickname + END_LINE);
+				break;
+
+			case DirMessageOps.OPERATION_LOOKUPSERVER_OK:
+				sb.append(FIELDNAME_SERVER + DELIMITER + server + END_LINE);
+				break;
+
+			case DirMessageOps.OPERATION_LOOKUPSERVER_FAIL:	//no hay nada que hacer
+				break;
+			
 			default:	//los break salen por el default
 				break;
 			

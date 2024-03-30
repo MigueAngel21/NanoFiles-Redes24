@@ -33,4 +33,8 @@ public class DirMessageOps {
 	public static final String OPERATION_USERSTATUS_OK = "userStatusOk"; //mensaje bien
 	public static final String OPERATION_USERSTATUS_FAIL = "userStatusFail"; //mensaje de fallo
 
+	public static final String OPERATION_LOOKUPSERVER = "lookupServerByUsername"; //mensaje de busqueda de servidor por nombre
+	public static final String OPERATION_LOOKUPSERVER_OK = "lookupServerByUsernameOk"; //mensaje bien
+	public static final String OPERATION_LOOKUPSERVER_FAIL = "lookupServerByUsernameFail"; //mensaje de fallo
+	
 }

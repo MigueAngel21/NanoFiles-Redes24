@@ -332,6 +332,27 @@ public class NFDirectoryServer {
 			}
 			break;
 		}
+
+		case DirMessageOps.OPERATION_LOOKUPSERVER: {
+			int clave = Integer.parseInt(msg.getSessionKey());
+			if (!(sessionKeys.containsKey(clave))) {
+				response = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER_FAIL);
+				System.err.println("Lookup server failed: session key not found");
+			} else {
+				String username = msg.getNickname();
+				if (!(servers.containsKey(username))) {
+					response = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER_FAIL);
+					System.err.println("Lookup server failed: fileserver not found");
+				} else {
+					InetSocketAddress serverAddress = servers.get(username);
+					response = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER_OK);
+					response.setServer(serverAddress.toString().substring(1));
+					System.out.println("Lookup server success: " + username + " at " + serverAddress);
+				}
+			}
+			break;
+		}
+
 		default:
 			System.out.println("Unexpected message operation: \"" + operation + "\"");
 		}

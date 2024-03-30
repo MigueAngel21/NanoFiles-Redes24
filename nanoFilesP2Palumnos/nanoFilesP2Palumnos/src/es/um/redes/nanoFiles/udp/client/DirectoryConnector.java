@@ -411,7 +411,26 @@ public class DirectoryConnector {
 	public InetSocketAddress lookupServerAddrByUsername(String nick) {
 		InetSocketAddress serverAddr = null;
 		// TODO: Ver TODOs en logIntoDirectory y seguir esquema similar
-
+		DirMessage msglookup = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER);
+		msglookup.setSessionKey(Integer.toString(getSessionKey()));
+		msglookup.setNickname(nick);
+		String strToSend = msglookup.toString();
+		byte[] dataToSend = strToSend.getBytes();
+		byte[] receiveData = null;
+		receiveData = sendAndReceiveDatagrams(dataToSend);
+		DirMessage response = DirMessage.fromString(new String(receiveData, 0, receiveData.length));
+		String operation = response.getOperation();
+		if (operation.equals(DirMessageOps.OPERATION_LOOKUPSERVER_OK)) {
+			String server = response.getServer();
+			int idx = server.indexOf(":");	
+			String ip = server.substring(0, idx);
+			String port = server.substring(idx+1).trim();
+			serverAddr = new InetSocketAddress(ip, Integer.parseInt(port));
+			System.out.println("Direccion de servidor obtenida");
+		} else {
+			System.err.println("Error de obtencion de direccion de servidor: "+operation);
+		}
+		
 
 
 		return serverAddr;
