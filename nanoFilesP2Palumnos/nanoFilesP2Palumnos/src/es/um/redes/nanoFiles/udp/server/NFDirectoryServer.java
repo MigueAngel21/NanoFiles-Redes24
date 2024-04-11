@@ -309,19 +309,19 @@ public class NFDirectoryServer {
 				String port = msg.getPort();
 				int portInt = Integer.parseInt(port);
 				System.out.println(clientAddr.getAddress().toString());
-				
+				/*
 				if(clientAddr.getAddress().toString().equals("/127.0.0.1")){
-					InetSocketAddress bgServerAddress = new InetSocketAddress(msg.getServer(), portInt);
+					InetSocketAddress bgServerAddress = new InetSocketAddress(, portInt);
 					servers.put(username, bgServerAddress);
 					response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK);
 					System.out.println("Fileserver " + username + " registered at " + bgServerAddress);
 				} else{
-				
+				*/
 				InetSocketAddress bgServerAddress = new InetSocketAddress(clientAddr.getAddress(), portInt);
 				servers.put(username, bgServerAddress);
 				response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK);
 				System.out.println("Fileserver " + username + " registered at " + bgServerAddress);
-				}
+				//}
 			}
 			break;
 		}
@@ -355,9 +355,22 @@ public class NFDirectoryServer {
 					System.err.println("Lookup server failed: fileserver not found");
 				} else {
 					InetSocketAddress serverAddress = servers.get(username);
+					String servidor = serverAddress.toString();
+					int idx = servidor.indexOf(":");	
+					String ip = servidor.substring(0, idx);
+					String port = servidor.substring(idx+1);
+					if(ip.equals("/127.0.0.1")){
+					String ip2=msg.getServer();
+					String server=ip2+":"+port;
+					response = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER_OK);
+					response.setServer(server.substring(1));
+					System.out.println("Lookup server success: " + username + " at " + server);
+					}
+					else{
 					response = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER_OK);
 					response.setServer(serverAddress.toString().substring(1));
 					System.out.println("Lookup server success: " + username + " at " + serverAddress);
+					}
 				}
 			}
 			break;

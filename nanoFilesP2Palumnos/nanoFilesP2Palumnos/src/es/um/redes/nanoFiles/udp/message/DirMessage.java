@@ -284,7 +284,6 @@ public class DirMessage {
 			case DirMessageOps.OPERATION_REGISTER_FILESERVER:
 				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
 				sb.append(FIELDNAME_PORT + DELIMITER + port + END_LINE);
-				sb.append(FIELDNAME_SERVER + DELIMITER + server + END_LINE);
 				break;
 			
 			case DirMessageOps.OPERATION_REGISTER_FILESERVER_OK:	//no hay nada que hacer
@@ -304,6 +303,7 @@ public class DirMessage {
 			case DirMessageOps.OPERATION_LOOKUPSERVER:
 				sb.append(FIELDNAME_SESSIONKEY + DELIMITER + sessionkey + END_LINE);
 				sb.append(FIELDNAME_NICKNAME + DELIMITER + nickname + END_LINE);
+				sb.append(FIELDNAME_SERVER + DELIMITER + server + END_LINE);
 				break;
 
 			case DirMessageOps.OPERATION_LOOKUPSERVER_OK:

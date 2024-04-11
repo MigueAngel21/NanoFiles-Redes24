@@ -418,6 +418,7 @@ public class DirectoryConnector {
 		DirMessage msglookup = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER);
 		msglookup.setSessionKey(Integer.toString(getSessionKey()));
 		msglookup.setNickname(nick);
+		msglookup.setServer(this.directoryAddress.toString());
 		String strToSend = msglookup.toString();
 		byte[] dataToSend = strToSend.getBytes();
 		byte[] receiveData = null;
