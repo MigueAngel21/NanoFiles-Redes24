@@ -426,7 +426,7 @@ public class DirectoryConnector {
 			String ip = server.substring(0, idx);
 			String port = server.substring(idx+1).trim();
 			serverAddr = new InetSocketAddress(ip, Integer.parseInt(port));
-			System.out.println("Direccion de servidor obtenida");
+			System.out.println("Direccion de servidor obtenida: "+serverAddr.toString());
 		} else {
 			System.err.println("Error de obtencion de direccion de servidor: "+operation);
 		}

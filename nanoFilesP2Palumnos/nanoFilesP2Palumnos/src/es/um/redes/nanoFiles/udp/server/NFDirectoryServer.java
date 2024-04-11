@@ -308,7 +308,7 @@ public class NFDirectoryServer {
 				String username = sessionKeys.get(clave);
 				String port = msg.getPort();
 				int portInt = Integer.parseInt(port);
-				InetSocketAddress bgServerAddress = new InetSocketAddress(clientAddr.getAddress(), portInt);
+				InetSocketAddress bgServerAddress = new InetSocketAddress(clientAddr.getAddress().getHostAddress(), portInt);
 				servers.put(username, bgServerAddress);
 				response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK);
 				System.out.println("Fileserver " + username + " registered");
