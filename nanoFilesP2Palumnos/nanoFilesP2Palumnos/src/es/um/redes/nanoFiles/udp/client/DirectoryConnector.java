@@ -62,7 +62,7 @@ public class DirectoryConnector {
 		 * 		
 		 */
 		InetAddress addressAsInetAddress = InetAddress.getByName(address);
-		directoryAddress = new InetSocketAddress( addressAsInetAddress, DIRECTORY_PORT);
+		this.directoryAddress = new InetSocketAddress( addressAsInetAddress, DIRECTORY_PORT);
 		/*
 		 * TODO: Crea el socket UDP en cualquier puerto para enviar datagramas al
 		 * directorio
@@ -352,6 +352,10 @@ public class DirectoryConnector {
 		DirMessage msgregister = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER);
 		msgregister.setSessionKey(Integer.toString(getSessionKey()));
 		msgregister.setPort(Integer.toString(serverPort));
+		String servidor = this.directoryAddress.toString();
+		int idx = servidor.indexOf(":");	
+		String ip = servidor.substring(0, idx);
+		msgregister.setServer(ip);
 		String strToSend = msgregister.toString();
 		byte[] dataToSend = strToSend.getBytes();
 		byte[] receiveData = null;

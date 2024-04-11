@@ -308,10 +308,20 @@ public class NFDirectoryServer {
 				String username = sessionKeys.get(clave);
 				String port = msg.getPort();
 				int portInt = Integer.parseInt(port);
-				InetSocketAddress bgServerAddress = new InetSocketAddress(clientAddr.getAddress().getHostAddress(), portInt);
+				System.out.println(clientAddr.getAddress().toString());
+				
+				if(clientAddr.getAddress().toString().equals("/127.0.0.1")){
+					InetSocketAddress bgServerAddress = new InetSocketAddress(msg.getServer(), portInt);
+					servers.put(username, bgServerAddress);
+					response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK);
+					System.out.println("Fileserver " + username + " registered at " + bgServerAddress);
+				} else{
+				
+				InetSocketAddress bgServerAddress = new InetSocketAddress(clientAddr.getAddress(), portInt);
 				servers.put(username, bgServerAddress);
 				response = new DirMessage(DirMessageOps.OPERATION_REGISTER_FILESERVER_OK);
-				System.out.println("Fileserver " + username + " registered");
+				System.out.println("Fileserver " + username + " registered at " + bgServerAddress);
+				}
 			}
 			break;
 		}
