@@ -363,7 +363,7 @@ public class NFDirectoryServer {
 					String ip2=msg.getServer();
 					String server=ip2+":"+port;
 					response = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER_OK);
-					response.setServer(server.substring(1));
+					response.setServer(server.substring(0));
 					System.out.println("Lookup server success: " + username + " at " + server);
 					}
 					else{
