@@ -259,7 +259,7 @@ public class NFDirectoryServer {
 				System.err.println("Userlist failed: session key not found");
 			} else {
 				System.out.println("Recieve userlist request from " + clientAddr);
-				System.out.println("Client " + clientAddr + "successfully obteined userlist");
+				System.out.println("Client " + clientAddr + " successfully obtained userlist");
 				response = new DirMessage(DirMessageOps.OPERATION_USERLIST_OK);
 				String[] userlist = new String[nicks.size()];
 				for (int i = 0; i < nicks.size(); i++) {

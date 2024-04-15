@@ -353,9 +353,17 @@ public class DirectoryConnector {
 		msgregister.setSessionKey(Integer.toString(getSessionKey()));
 		msgregister.setPort(Integer.toString(serverPort));
 		String servidor = this.directoryAddress.toString();
-		int idx = servidor.indexOf(":");	
-		String ip = servidor.substring(0, idx);
-		msgregister.setServer(ip);
+		int idx = servidor.indexOf(":");
+		if(servidor.contains("localhost")){
+			servidor = servidor.replace("localhost", "");
+			idx = servidor.indexOf(":");
+			String ip = servidor.substring(0, idx);
+			msgregister.setServer(ip);
+		}
+		else{
+			String ip = servidor.substring(0, idx);
+			msgregister.setServer(ip);
+		}
 		String strToSend = msgregister.toString();
 		byte[] dataToSend = strToSend.getBytes();
 		byte[] receiveData = null;
@@ -418,7 +426,16 @@ public class DirectoryConnector {
 		DirMessage msglookup = new DirMessage(DirMessageOps.OPERATION_LOOKUPSERVER);
 		msglookup.setSessionKey(Integer.toString(getSessionKey()));
 		msglookup.setNickname(nick);
-		msglookup.setServer(this.directoryAddress.toString());
+		int idx1 = this.directoryAddress.toString().indexOf(":");
+		String ip1 = this.directoryAddress.toString().substring(0, idx1);
+
+		if(ip1.contains("localhost")){
+			ip1 = ip1.replace("localhost", "");
+			msglookup.setServer(ip1);
+		}
+		else{
+			msglookup.setServer(ip1);
+		}
 		String strToSend = msglookup.toString();
 		byte[] dataToSend = strToSend.getBytes();
 		byte[] receiveData = null;
@@ -427,10 +444,10 @@ public class DirectoryConnector {
 		String operation = response.getOperation();
 		if (operation.equals(DirMessageOps.OPERATION_LOOKUPSERVER_OK)) {
 			String server = response.getServer();
-			int idx = server.indexOf(":");	
-			String ip = server.substring(0, idx);
-			String port = server.substring(idx+1).trim();
-			serverAddr = new InetSocketAddress(ip, Integer.parseInt(port));
+			int idx2 = server.indexOf(":");	
+			String ip2 = server.substring(1, idx2);
+			String port = server.substring(idx2+1).trim();
+			serverAddr = new InetSocketAddress(ip2, Integer.parseInt(port));
 			System.out.println("Direccion de servidor obtenida: "+serverAddr.toString());
 		} else {
 			System.err.println("Error de obtencion de direccion de servidor: "+operation);

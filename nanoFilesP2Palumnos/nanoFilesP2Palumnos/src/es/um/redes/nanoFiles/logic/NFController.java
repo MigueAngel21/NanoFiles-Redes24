@@ -16,6 +16,7 @@ public class NFController {
 	 */
 	private static final byte LOGGED_OUT = 0;
 	private static final byte LOGGED_IN = 1;
+	private static final byte SERVING = 2;
 	/*
 	 * TODO: Añadir más constantes que representen los estados del autómata del
 	 * cliente de directorio.
@@ -232,47 +233,63 @@ public class NFController {
 			break;
 		}
 		case NFCommands.COM_LOGIN:
-			if (currentState != LOGGED_OUT) {
+			if (currentState == LOGGED_IN || currentState == SERVING) {
 				commandAllowed = false;
-				System.err.println("* You cannot login because you are not logged out from the directory");
+				if (currentState == LOGGED_IN) {
+					System.err.println("* You are already logged in the directory");
+				} else {
+					System.err.println("* You cannot login because you are already serving files");
+				}
 			}
 			break;
 		case NFCommands.COM_LOGOUT:
-			if (currentState != LOGGED_IN) {
+			if (currentState == LOGGED_OUT || currentState == SERVING) {
 				commandAllowed = false;
-				System.err.println("* You cannot logout because you are not logged in the directory");
+				if (currentState == LOGGED_OUT) {
+					System.err.println("* You are not logged in the directory");
+				} else {
+					System.err.println("* You cannot logout because you are serving files");
+				}
 			}
 			break;
 		case NFCommands.COM_USERLIST:
-			if (currentState != LOGGED_IN) {
+			if (currentState == LOGGED_OUT) {
 				commandAllowed = false;
 				System.err.println("* You cannot list users because you are not logged in the directory");
 			}
 			break;
 		case NFCommands.COM_FGSERVE:
-			if (currentState != LOGGED_IN) {
+			if (currentState == LOGGED_OUT) {
 				commandAllowed = false;
 				System.err.println("* You cannot foreground serve files because you are not logged in the directory");
 			}
 			break;
 		case NFCommands.COM_DOWNLOADFROM:
-			if (currentState != LOGGED_IN) {
+			if (currentState == LOGGED_OUT) {
 				commandAllowed = false;
 				System.err.println("* You cannot download from a server because you are not logged in the directory");
 			}
 			break;
 
 		case NFCommands.COM_BGSERVE:
-			if (currentState != LOGGED_IN) {
+			if (currentState == LOGGED_OUT || currentState == SERVING) {
 				commandAllowed = false;
-				System.err.println("* You cannot background serve files because you are not logged in the directory");
+				if (currentState == LOGGED_OUT) {
+					System.err.println("* You cannot background serve files because you are not logged in the directory");
+				} else {
+					System.err.println("* You are already serving files");
+				}	
 			}
 			break;
 
 		case NFCommands.COM_STOP_SERVER:
-			if (currentState != LOGGED_IN) {
+			if (currentState == LOGGED_IN || currentState == LOGGED_OUT) {
 				commandAllowed = false;
-				System.err.println("* You cannot stop the server because you are not logged in the directory");
+				if (currentState == LOGGED_IN) {
+					System.err.println("* You cannot stop the server because you are not serving files");
+				} else {
+					System.err.println("* You cannot stop the server because you are not logged in the directory");
+				}
 			}
 			break;
 
@@ -312,10 +329,12 @@ public class NFController {
 			break;	//no cambia el estado
 		}
 		case NFCommands.COM_BGSERVE: {
-			break;	//no cambia el estado
+			currentState = SERVING;
+			break;
 		}
 		case NFCommands.COM_STOP_SERVER: {
-			break;	//no cambia el estado
+			currentState = LOGGED_IN;
+			break;
 		}
 		default:
 		}
